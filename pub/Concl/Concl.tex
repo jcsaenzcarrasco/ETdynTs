@@ -1,0 +1,24 @@
+\section{Conclusion and Future Work} 
+\label{sec:Concl} 
+
+Although we have presented evidence that ETFT trees are efficient data structures for dynamic tree handling, we have noticed experimentally that there is plenty of work to do specifically in the stream of interleaved operations applied as input to the data structure, that is, the unbounded sequence of updates and queries.
+
+Finally, there is an evident need for a library of well-crafted test cases against which implementations of dynamic trees and graphs can be tested. At present, for example, there is little to guide us when generating the update-sequences against which our structures are validated, and this raises a number of obvious issues. For example,
+
+\begin{itemize}
+\item Can we find test sets which guarantee coverage of key properties?
+
+\item Which properties are we interested in?
+
+\item If we know the general ratio of updates to queries (say), can we identify a more specific data structure to enhance efficiency still further?
+
+\item Or maybe it’s enough to test solutions empirically, using live data from (say) the ever-changing structure of links in the Internet of Things?
+
+\end{itemize}
+
+These and other questions remain to be addressed, but we believe the quest for efficient dynamic data structures will become ever more important as seek to model, simplify and reason about the increasingly dynamic algorithmic structures in which modern culture is immersed and on which it depends.
+
+
+\tcb{Uniqueness on edges allow to carry labels, therefore ETFT could be the core for other approaches to dynamic trees such link-cut trees. Examples, illustrations, references ?? } 
+
+\tcb{Acknowledgements:  chahine.moreau@gmail.com ?? }

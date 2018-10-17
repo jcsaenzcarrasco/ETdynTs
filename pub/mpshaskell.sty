@@ -1,0 +1,69 @@
+% mpshaskell.sty
+% Author: Mike Stannett <m.stannett@sheffield.ac.uk>
+% Date: 9 May 2017
+% Extensible syntax highlighting package for Haskell
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{listings}
+
+
+\newcommand{\myStringStyle}{\ttfamily}
+\newcommand{\myCommentStyle}{\color{Gray}\myStringStyle}
+\newcommand{\myIdentifierStyle}{\color{BrickRed}\myStringStyle}
+\newcommand{\myKeyWordStyle}{\color{Green}\myStringStyle}
+\newcommand{\myClassStyle}{\color{Red}\myStringStyle}
+\newcommand{\myTypeVarStyle}{\color{Black}\myStringStyle}
+\newcommand{\myCodeWordStyle}{\color{Blue}\myStringStyle}
+\newcommand{\myFunctionStyle}{\color{Blue}\itshape\myStringStyle}
+\newcommand{\myConstructorStyle}{\color{Purple}\myStringStyle}
+\newcommand{\mySymbolColour}{Blue}
+
+\newcommand{\KeyWords}[1]{
+  \lstset{classoffset=0,keywords={#1},
+          keywordstyle=\myKeyWordStyle,classoffset=0,}
+}
+
+\newcommand{\newKeyWord}[1]{
+  \lstset{classoffset=0,morekeywords={#1},keywordstyle=\myKeyWordStyle,classoffset=0,}
+}
+\newcommand{\newClass}[1]{
+  \lstset{classoffset=1,morekeywords={#1},keywordstyle=\myClassStyle,classoffset=0,}
+}
+\newcommand{\newTypeVar}[1]{
+  \lstset{classoffset=2,morekeywords={#1},keywordstyle=\myTypeVarStyle,classoffset=0,}
+}
+\newcommand{\newCodeWord}[1]{
+  \lstset{classoffset=3,morekeywords={#1},keywordstyle=\myCodeWordStyle,classoffset=0,}
+}
+\newcommand{\newFunction}[1]{
+  \lstset{classoffset=4,morekeywords={#1},keywordstyle=\myFunctionStyle,classoffset=0,}
+}
+\newcommand{\newConstructor}[1]{
+  \lstset{classoffset=5,morekeywords={#1},keywordstyle=\myConstructorStyle,classoffset=0,}
+}
+\newcommand{\newSymbol}[2]{\newcommand{#1}{\textcolor{\mySymbolColour}{#2}}}
+
+
+\lstset{
+  language         = Haskell,
+  numbers          = left,
+  basicstyle       = \footnotesize,
+  basewidth        = {0.5em,0.5em},
+  frame            = single,
+  frameround       = tttt,
+  stringstyle      = \myStringStyle,
+  showstringspaces =false,
+  identifierstyle  = \myIdentifierStyle,
+  commentstyle     = \myCommentStyle,
+}
+
+\newcommand{\haskell}[1]{\lstinline`#1`}
+
+\KeyWords{data,type,newtype,deriving,case,of}
+\newClass{Eq,Ord,Show,Read,Maybe}
+\newConstructor{Just,Nothing}
+\newTypeVar{a,b,c,x,y,z,t}
+
+
+ 
+

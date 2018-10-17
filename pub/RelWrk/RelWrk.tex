@@ -1,0 +1,12 @@
+\section{Related Work} 
+\label{sec:RelWrk} 
+
+Approaches different to our own have, of course, been taken by other researchers, in particular by Dexter et al. \cite{Lazy-Gproc-Haskell} as well as by Headley and Hammer \cite{RAZ}. The former uses techniques to delay the computation of updates and the latter uses lighter and simpler data structures. Considering our own work alongside these approaches leads us to suggest that it may be possible to produce an interesting combination of the three, since there are at least three aspects we have found to be experimentally time-consuming in practice:
+
+\begin{enumerate}
+\item an Euler tour is treated as a sequence by efficient structures like finger trees, but the corresponding tree-like operations are also involved in update operations. A mixed, or lighter structure is an essential step towards achieving general efficiency;
+
+\item the unbounded sequence of update operations results in a need to maintain the whole structure. In this context persistence triggers the consumption of memory allocation, and this suggests that benefits may accrue if we were to use higher order programming with effects;
+
+\item the internal nodes of our finger tree structure hold the internal monoid \code{Set}, which is the most time-consuming element in our code and experimental results. Since rebalancing is an essential property of the internal binary search tree in \code{Set}, we propose conducting an analysis and design of different new balanced binary search tree as monoid in future work.
+\end{enumerate}
