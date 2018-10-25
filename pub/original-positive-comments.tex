@@ -1,0 +1,16 @@
+
+
+\tcr{---------- P O S I T I V E    C O M M E N T S ------------------}
+
+
+\tcr{This paper introduces Euler Tour Finger Trees (ETFTs), a persistent, purely-functional tree and forest data structure that supports O(log n) complexity for all operations, including link and cut. It gives an implementation in Haskell.}
+
+\tcr{At a high-level, the tree is represented as an Euler Tour (a list of vertex pairs describing a path through the tree), which in turn is represented by a finger tree, thereby allowing O(log n) concatenation and splitting. That allows manipulating Euler tours efficiently, and building interesting tree operations easily.}
+
+\tcr{Most of the implementation in this paper thus builds on existing implementations of finger trees and sets. Yet the combination seems novel, and the complexity bounds of the ETFT operations follow almost trivially, which is nice.
+The paper presents a functional data structure for maintaining a dynamic forest under link and cut operations. It realizes this in O(log n) time complexity per operation (amortized), using an Euler tour tree representation implemented using a combination of finger trees and sets. }
+
+\tcr{The paper first recalls dynamic trees and their operations, and then monoids, sets implemented with balanced search trees, Euler-tour trees and finger trees. It then gives (graphical) examples of how the sets and finger trees fit together to realize dynamic trees, it recalls graphically the root, reroot, split, concatenation, and view operations of finger trees, and then walks through the implementation of root, reroot, connected, link, and cut.
+Finally the paper contains experiments illustrating that the implementation meets the claimed complexity bounds and discusses related and future work.
+This is an interesting piece of work.}
+

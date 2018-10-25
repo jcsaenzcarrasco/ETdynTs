@@ -1,12 +1,10 @@
 \documentclass{elsarticle}
+
 \biboptions{sort&compress}
 \bibliographystyle{alpha}
 
+\usepackage{amsmath,amssymb,amsfonts}
 
-
-\usepackage{amssymb}
-%\setcounter{tocdepth}{3}
-\usepackage{graphicx} 
 
 % HASKELL SYNTAX HIGHLIGHTING - MUST BE LOADED BEFORE xcolor and listings IF THEY'RE ALSO BEING USED
 \usepackage{mpshaskell}
@@ -17,29 +15,26 @@
 \newSymbol{\insertR}{\rhd}
 % END OF HASKELL SYNTAX HIGHLIGHTING
 
-% ADDED BY MIKE
+\usepackage{xcolor}
+\usepackage{graphicx} 
+\usepackage{xspace}
+\usepackage{url}
+
+% PROOF-READING COMMANDS
+\newcommand{\tcr} [1]{\textcolor{red}{#1}}
+\newcommand{\tcb} [1]{\emph{\textcolor{blue}{#1}}}
 \newcommand{\madd}[1]{\textcolor{Purple}{#1}}
 \newcommand{\mdel}[1]{\textcolor{Yellow}{#1}}
 
-\usepackage{xspace}
+% FORMATTING
 \newcommand{\MATHSF}[1]{\ensuremath{\mathsf{#1}}\xspace}
+
+% SYNTAX
 \newcommand{\link}{\MATHSF{link}}
 \newcommand{\cut}{\MATHSF{cut}}
 \renewcommand{\root}{\MATHSF{root}}
 \newcommand{\reroot}{\MATHSF{reroot}}
 \newcommand{\connected}{\MATHSF{connected}}
-% END OF MIKE'S ADDITIONS
-
-
-\usepackage{xcolor}
-
-\usepackage{url}
-%\urldef{\mailjm}\path|{jcsaenzcarrasco1, m.stannett}@sheffield.ac.uk|    
-\newcommand{\keywords}[1]{\par\addvspace\baselineskip
-\noindent\keywordname\enspace\ignorespaces#1}
-
-\newcommand{\tcr} [1]{\textcolor{red}{#1}}
-\newcommand{\tcb} [1]{\emph{\textcolor{blue}{#1}}}
 
 
 \begin{document}
@@ -60,7 +55,9 @@ Sheffield S1 4DP, United Kingdom}
 \fntext[conacyt]{Postgraduate research student, supported by the Consejo Nacional de Ciencia y Tecnolog\'{i}a, CONACYT (Mexican National Council for Science and Technology) under grant 411550, scholar 580617, CVU 214885.}
 
 \begin{abstract}
-We present purely-functional data structures for managing dynamic updates and queries, by combining the structure of Hinze and Paterson's finger tree with an efficient binary search tree to handle Euler tours as sequences: like its imperative counterpart, our proposal supports $O(\log n)$ amortised complexity per operation, where $n$ is the number of the vertices in the tree. While existing data structures mirror these time bounds, ours is arguably the first to provide all three of the basic dynamic tree operations (\link, \cut and \connected) within a single functional structure. To illustrate how the algorithms perform in practice we have implemented them in Haskell and conducted various benchmarking experiments. The data support our claims, while also pointing to remaining inefficiencies. We discuss these in detail and suggest possible ways forward.
+In this paper we show how functional-programming features, most notably the use of lazy evaluation, can be exploited in the context of modelling massive dynamically changing networks. Such networks are increasingly ubiquitous and important to modern commerce and society, but with growing size comes additional computational overheads, and it is important to determine whether low-complexity, preferably sub-linear, algorithms can be derived for such key tasks as finding paths between nodes, re-routing network traffic due to local outages, or distributing workloads strategically to maximize network efficiency.
+
+We introduce a novel dynamic data structure which supports $O(\log n)$ amortised complexity for all three of the basic dynamic operations (\link, \cut and \connected), where $n$ is the number of the vertices in the network. While existing functional structures mirror these time bounds in isolation, ours is the first to support all three of the operations within a single functional structure. To illustrate how the algorithms perform in practice we have implemented them in Haskell and conducted various benchmarking experiments. The data support our claims, while also pointing to remaining inefficiencies. We discuss these in detail and suggest additional ways forward.
 \end{abstract}
 
 \begin{keyword}
@@ -70,44 +67,16 @@ Dynamic tree algorithms \sep functional programming \sep persistent data structu
 
 \maketitle
 
-
+\input{original-positive-comments}
 
 
 \input{./Intro/Intro}
-
-
-\tcr{---------- P O S I T I V E    C O M M E N T S ------------------}
-
-
-\tcr{This paper introduces Euler Tour Finger Trees (ETFTs), a persistent, purely-functional tree and forest data structure that supports O(log n) complexity for all operations, including link and cut. It gives an implementation in Haskell.}
-
-\tcr{At a high-level, the tree is represented as an Euler Tour (a list of vertex pairs describing a path through the tree), which in turn is represented by a finger tree, thereby allowing O(log n) concatenation and splitting. That allows manipulating Euler tours efficiently, and building interesting tree operations easily.}
-
-\tcr{Most of the implementation in this paper thus builds on existing implementations of finger trees and sets. Yet the combination seems novel, and the complexity bounds of the ETFT operations follow almost trivially, which is nice.
-The paper presents a functional data structure for maintaining a dynamic forest under link and cut operations. It realizes this in O(log n) time complexity per operation (amortized), using an Euler tour tree representation implemented using a combination of finger trees and sets. }
-
-\tcr{The paper first recalls dynamic trees and their operations, and then monoids, sets implemented with balanced search trees, Euler-tour trees and finger trees. It then gives (graphical) examples of how the sets and finger trees fit together to realize dynamic trees, it recalls graphically the root, reroot, split, concatenation, and view operations of finger trees, and then walks through the implementation of root, reroot, connected, link, and cut.
-Finally the paper contains experiments illustrating that the implementation meets the claimed complexity bounds and discusses related and future work.
-This is an interesting piece of work.}
-%\end{comment}
-
-
 \input{./Prelim/Prelim}
-
-%\input{./Example/Example}
-
+\input{./Example/Example}
 \input{./TechDes/TechDes} 
-
 \input{./Eval/Eval} 
-
 \input{./RelWrk/RelWrk} 
-
 \input{./Concl/Concl} 
-
 \bibliography{./Refs/refs}
-
-%\begin{thebibliography}{4}
-%\input{./Refs/refs.bib}
-%\end{thebibliography} 
 
 \end{document}
