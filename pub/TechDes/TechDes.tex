@@ -12,55 +12,57 @@ data Tree a = Node {
 
 So, a tree is a node of type \code{a} (i.e. its root) altogether with a list (possibly empty) of subtrees, seen as forest of type \code{Forest a}. Analogous to multiway trees, our trees (finger trees holding Euler-tours) can not be empty. 
 
-Firstly, we turn a tree into a list of nodes, by attaching the prefix and suffix of inner subtrees into the current node. We later feed this list into a finger tree. 
+Firstly, we turn a tree into a list of nodes, by attaching (mapping) the prefix and suffix of current node to inner subtrees. We later feed this list into a finger tree. 
 
 \begin{lstlisting}[mathescape] 
 rt2et :: (Eq a) $\Rightarrow$ Tree a $\to$ [(a,a)] 
 rt2et (Node x ts) = case ts of
-  []       $\to$ [(x,x)]
-  (t':ts') $\to$ root ++ concat ( map ($\lambda$t $\to$ pref t ++ rt2et t ++ suff t) ts )   
+  [] $\to$ [(x,x)]
+  _  $\to$ root ++ concat ( map ($\lambda$t $\to$ pref t ++ rt2et t ++ suff t) ts )   
     where
      pref v = [(x,rootLabel v)]
      suff v = [(rootLabel v,x)]
      root   = [(x,x)] 
 \end{lstlisting} 
 
+Since \code{concat} and \code{++} take $O(n)$ where $n$ is the size of their arguments, \code{rt2et} takes $O(n^2)$. \tcr{Should we need to prove this ???}
 
+The corresponding forest transformation to list of pairs is simply the application of \code{rt2et} to every element in the tree list. 
 
+\begin{lstlisting}[mathescape] 
+rf2et :: (Eq a) $\Rightarrow$ Forest a $\to$ [[(a,a)]]
+rf2et []          = []
+rf2et [Node x []] = [[(x,x)]]  
+rf2et (t:ts)      = (rt2et t) : rf2et ts
+\end{lstlisting}
 
-Once a tree $t$ of any degree is turned into an Euler tour $et$, we are able to manage $et$ as a sequence. Since finger trees work efficiently on sequences we just need a few steps to \textit{link} and \textit{cut} trees by splitting and concatenating sequences, which take logarithmic time to compute them. Additional functions \textit{cons}, inserting to the front of the sequence and \textit{snoc}, inserting to the end of the sequence, just take $O(1)$, according to Table~\ref{tab:FTfuncs}.
+Once a tree $t$ of any degree is turned into an Euler tour $et$, we are able to manage $et$ as a sequence. Since finger trees work efficiently on sequences, according to \cite{FTs}, we tailored the finger tree in order to support \link, \cut and \connected operations over unrooted trees following the corresponding properties and algorithm by Henzinger and King in \cite{Rand-DynGs-Algos}.
 
-Recall that functions in Table~\ref{tab:FTfuncs} work with finger trees of any type \code{a} constrained to \code{v} monoidal annotation. In order to manipulate vertices and edges as Euler tours, we specialized the ETFT types to handle  pairs, hence the underlying finger tree types are \code{Set (a,a)} for the monoidal annotation (previously \code{v}) and \code{(a,a)} for values on the leaves (previously \code{a}). 
+Recall data type in Fig~\ref{fig:FTdatatype} works with finger trees of any type \code{a} constrained to the monoidal annotation of type \code{v}. In order to manipulate nodes and edges as Euler tours, we specialized the \dyntset types to handle  pairs, hence the underlying finger tree types are \code{Set (a,a)} for the monoidal annotation (previously \code{v}) and \code{(a,a)} for values on the leaves (previously \code{a}). 
 
-The full implementation of dynTsET\footnote{\url{https://github.com/jcsaenzcarrasco/ETdynTs}} contains the core functions for \code{link}ing, \code{cut}ting and asking for connectividad (\code{conn}) as well as the helper functions detailing the conversion between multiway trees and ET-tours.
+The full implementation of dynTsET\footnote{\url{https://github.com/jcsaenzcarrasco/ETdynTs}} contains the core functions for \code{link}ing, \code{cut}ting and asking for connectividad (\code{conn}) as well as the helper functions detailing the conversion between multiway trees and Euler-tours.
 
 \tcb{SUBSECTION FOREST. Either here or before section 4.1}
 
-For practical purposes we will show a forest and trees holding integers in this paper, but a polymorphic type can be extended easily.
+For practical purposes we let forest and trees to be of type \code{Int} in this paper, but a polymorphic type can be extended easily.
 
-We start with type definitions for vertices, trees, forests, and their empty instances as in Figure~\ref{fig:emptys}
-\begin{figure}
-%\small
-%\begin{verbatim}
+We start with type definitions for nodes, trees, forests, and their empty instances as in : % Figure~\ref{fig:emptys}
 \begin{lstlisting}[mathescape]
-type FTInt  = FT (S.Set (Int,Int)) (Int,Int) 
-type Forest = FT (S.Set (Int,Int)) FTInt 
-type Vertex = Int 
+type TreeEF   a = FingerTree (S.Set (a,a)) (a,a)
+type ForestEF a = FingerTree (S.Set (a,a)) (TreeEF a) 
 
-emptyTree :: FTInt
-emptyTree =  Empty 
+emptyForest :: Ord a => ForestEF a  
+emptyForest  = FingerTree.empty 
 
-emptyForest :: Forest
-emptyForest =  Empty
+emptyTree :: Ord a => TreeEF a 
+emptyTree  = FingerTree.empty 
 
-instance (Ord a) $\Rightarrow$ Measured (a,a) (S.Set (a,a)) where 
+instance (Ord a) => Measured (S.Set (a,a)) (a,a) where 
    measure (x,y) = S.insert (x, y) S.empty 
 \end{lstlisting}   
-%\end{verbatim}
-%\normalsize
-\caption{code for \code{tree},\code{forest},\code{vertex} definitions and their empty cases}
-\label{fig:emptys}
-\end{figure}
+%\caption{code for \code{tree},\code{forest},\code{vertex} definitions and their empty cases}
+%\label{fig:emptys}
+%\end{figure}
 
 Every element in the tree $t$ (leaves in the finger tree) is measurable by calling \code{measure}, which returns the set-insertion operation of the element $(v,u)$ into an empty set. Here \code{Data.Set} is imported qualified as \code{S}
 

@@ -91,7 +91,8 @@ Our representation of $k$-trees through Euler-tour will not close up the tour wi
 \subsection{Finger tree} 
 
 We present Hinze and Paterson's version of finger trees \madd{(FTs)} \cite{FTs}, followed by the functions we have used for the \code{dynTsET}.
-%\begin{verbatim}
+
+\begin{figure}
 \begin{lstlisting}
 data FingerTree v a = Empty
                     | Single a 
@@ -100,8 +101,9 @@ data FingerTree v a = Empty
                            FingerTree v (Node v a) 
                            Digit a
 \end{lstlisting}                           
-%\end{verbatim}
-
+\caption{Data type of the finger tree by Hinze and Ross}
+\label{fig:FTdatatype}
+\end{figure}
 
 \tcr{This reviewer can't help but think that there seems to be a lot of redundancy in the proposed data structure, as the Euler tour node pairs are present in both the sets and in the finger trees.}
 
