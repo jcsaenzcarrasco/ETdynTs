@@ -1,8 +1,11 @@
+\documentclass{elsarticle}
+\biboptions{sort&compress}
+\bibliographystyle{alpha}
 
-\documentclass[runningheads,a4paper]{llncs}
+
 
 \usepackage{amssymb}
-\setcounter{tocdepth}{3}
+%\setcounter{tocdepth}{3}
 \usepackage{graphicx} 
 
 % HASKELL SYNTAX HIGHLIGHTING - MUST BE LOADED BEFORE xcolor and listings IF THEY'RE ALSO BEING USED
@@ -31,7 +34,7 @@
 \usepackage{xcolor}
 
 \usepackage{url}
-\urldef{\mailjm}\path|{jcsaenzcarrasco1, m.stannett}@sheffield.ac.uk|    
+%\urldef{\mailjm}\path|{jcsaenzcarrasco1, m.stannett}@sheffield.ac.uk|    
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
 
@@ -40,36 +43,34 @@
 
 
 \begin{document}
+\title{Dynamic Trees through Euler Tours\\%
+\large{A purely functional programming approach}}
 
-\mainmatter  % start of an individual contribution
+\author{J.C.~Saenz-Carrasco\fnref{conacyt}\corref{cor1}}
+\ead{jcsaenzcarrasco1@sheffield.ac.uk}
 
-\title{Dynamic Trees through Euler Tours\\ \large{A purely functional programming approach}}
+\author{M.~Stannett}
+\ead{m.stannett@sheffield.ac.uk}
 
-\titlerunning{Dynamic trees through Euler-tours, functionally}
-
-\author{Juan Carlos Saenz-Carrasco%
-\thanks{Postgraduate research student, supported by the Consejo Nacional de Ciencia y Tecnolog\'{i}a, CONACYT (the Mexican National Council for Science and Technology) under grant 411550, scholar 580617 and CVU 214885}%
-\and Mike Stannett}
-
-\authorrunning{Dynamic trees through Euler-tours, functionally}
-
-\institute{Department of Computer Science,\\
+\address{Department of Computer Science,\\
 Regent Court, 211 Portobello,\\
-Sheffield S1 4DP, United Kingdom\\
-\mailjm\\
-\url{https://www.sheffield.ac.uk/}}
+Sheffield S1 4DP, United Kingdom}
+
+\cortext[cor1]{Corresponding author}
+\fntext[conacyt]{Postgraduate research student, supported by the Consejo Nacional de Ciencia y Tecnolog\'{i}a, CONACYT (Mexican National Council for Science and Technology) under grant 411550, scholar 580617, CVU 214885.}
+
+\begin{abstract}
+We present purely-functional data structures for managing dynamic updates and queries, by combining the structure of Hinze and Paterson's finger tree with an efficient binary search tree to handle Euler tours as sequences: like its imperative counterpart, our proposal supports $O(\log n)$ amortised complexity per operation, where $n$ is the number of the vertices in the tree. While existing data structures mirror these time bounds, ours is arguably the first to provide all three of the basic dynamic tree operations (\link, \cut and \connected) within a single functional structure. To illustrate how the algorithms perform in practice we have implemented them in Haskell and conducted various benchmarking experiments. The data support our claims, while also pointing to remaining inefficiencies. We discuss these in detail and suggest possible ways forward.
+\end{abstract}
+
+\begin{keyword}
+Dynamic tree algorithms \sep functional programming \sep persistent data structures \sep Haskell
+\end{keyword}
 
 
-\toctitle{ETFT: a dynamic tree}
-\tocauthor{J. Saenz, M. Stannett}
 \maketitle
 
 
-\begin{abstract}
-We present purely-functional data structures for managing dynamic updates and queries. By doing so, we combine the structure of the Hinze's and Paterson finger tree with an efficient binary search tree to handle Euler tours as sequences: like its imperative counterpart, our proposal supports $O(\log n)$ amortised per operation, where $n$ is the number of the vertices in the tree. While existing data structures provide these time bounds, none do so to provide the three basic operations on dynamic trees: \link, \cut and \connected altogether within the same functional structure. However, in the nearly twenty years since, no one has shown that these functions work efficient under persistent data structures. \tcb{Some efforts have been done, for instance \url{chahine.moreau@gmail.com} at \url{https://github.com/k0ral/euler-tour-tree}. However there no proofs about correctness or efficiency. Also the part corresponding to forests is missing}
-To understand how the algorithms perform in practice we have also implemented them in the Haskell functional programming language. Our implementations are not as fast as the best of these on the ephemeral and imperative realm but comparable by the same order of magnitude.
-\keywords{Functional programming, persistent data structures, Haskell, \tcb{Experimental results}}
-\end{abstract}
 
 
 \input{./Intro/Intro}
@@ -104,7 +105,6 @@ This is an interesting piece of work.}
 \input{./Concl/Concl} 
 
 \bibliography{./Refs/refs}
-\bibliographystyle{splncs03}
 
 %\begin{thebibliography}{4}
 %\input{./Refs/refs.bib}
