@@ -1,11 +1,38 @@
-\section{ETFT Design}
+\section{dynTsET Design}
 \label{sec:TechDes}  
+
+We do not assume sequences representing Euler-tours are provided. Instead, we offer auxiliary functions that turn any-degree tree (and forest) into well-formed sequences. In Haskell, any-degree tree are also known as multiway or rose tree. Actually, there is a library that defines such trees, \code{Data.Tree}, in the Haskell community's central package archive (Hackage).
+
+\begin{lstlisting}
+data Tree a = Node {
+        rootLabel :: a,         
+        subForest :: Forest a   
+    }
+\end{lstlisting}
+
+So, a tree is a node of type \code{a} (i.e. its root) altogether with a list (possibly empty) of subtrees, seen as forest of type \code{Forest a}. Analogous to multiway trees, our trees (finger trees holding Euler-tours) can not be empty. 
+
+Firstly, we turn a tree into a list of nodes, by attaching the prefix and suffix of inner subtrees into the current node. We later feed this list into a finger tree. 
+
+\begin{lstlisting}[mathescape] 
+rt2et :: (Eq a) $\Rightarrow$ Tree a $\to$ [(a,a)] 
+rt2et (Node x ts) = case ts of
+  []       $\to$ [(x,x)]
+  (t':ts') $\to$ root ++ concat ( map ($\lambda$t $\to$ pref t ++ rt2et t ++ suff t) ts )   
+    where
+     pref v = [(x,rootLabel v)]
+     suff v = [(rootLabel v,x)]
+     root   = [(x,x)] 
+\end{lstlisting} 
+
+
+
 
 Once a tree $t$ of any degree is turned into an Euler tour $et$, we are able to manage $et$ as a sequence. Since finger trees work efficiently on sequences we just need a few steps to \textit{link} and \textit{cut} trees by splitting and concatenating sequences, which take logarithmic time to compute them. Additional functions \textit{cons}, inserting to the front of the sequence and \textit{snoc}, inserting to the end of the sequence, just take $O(1)$, according to Table~\ref{tab:FTfuncs}.
 
 Recall that functions in Table~\ref{tab:FTfuncs} work with finger trees of any type \code{a} constrained to \code{v} monoidal annotation. In order to manipulate vertices and edges as Euler tours, we specialized the ETFT types to handle  pairs, hence the underlying finger tree types are \code{Set (a,a)} for the monoidal annotation (previously \code{v}) and \code{(a,a)} for values on the leaves (previously \code{a}). 
 
-The full implementation of ETFT\footnote{\url{https://github.com/jcsaenzcarrasco/ETFT}} contains a simplified version of that in \cite{HaskellFT}, so we can reason with the type constructors from the finger trees into the ETFT functions. 
+The full implementation of dynTsET\footnote{\url{https://github.com/jcsaenzcarrasco/ETdynTs}} contains the core functions for \code{link}ing, \code{cut}ting and asking for connectividad (\code{conn}) as well as the helper functions detailing the conversion between multiway trees and ET-tours.
 
 \tcb{SUBSECTION FOREST. Either here or before section 4.1}
 
