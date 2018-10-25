@@ -1,0 +1,81 @@
+\relax 
+\@writefile{toc}{\contentsline {title}{ETFT: a dynamic tree}{1}}
+\@writefile{toc}{\authcount {2}}
+\@writefile{toc}{\contentsline {author}{J. Saenz, M. Stannett}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\newlabel{sec:Intro}{{1}{1}}
+\citation{DS-DynTs}
+\citation{Rand-DynGs-Algos}
+\citation{DSs-Online-Upd-MSTs}
+\citation{DynamizingAlgos}
+\citation{CVS-Demaine}
+\citation{FTs}
+\citation{FTs}
+\citation{FTs}
+\citation{Monoids}
+\citation{HaskellMonoid}
+\citation{HaskellSet}
+\citation{ParallelSets}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Preliminaries}{5}}
+\newlabel{sec:Prelim}{{2}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Monoid}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Set as binary search tree}{5}}
+\citation{Rand-DynGs-Algos}
+\citation{WerneckR-PhD}
+\citation{FTs}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Leijen's implementation of \lstinline `Data.Set` \cite  {HaskellSet}, based on \cite  {ParallelSets}}}{6}}
+\newlabel{tab:Setfuncs}{{1}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Euler-tour tree}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Finger tree}{6}}
+\citation{FTs}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The $k$-tree (left) is represented as a sequence of size $v+2e$ (right). Notice we left out the final node-pair to preserve uniqueness}}{7}}
+\newlabel{fig:Euler-tour}{{1}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}ETFT Design}{7}}
+\newlabel{sec:TechDes}{{3}{7}}
+\citation{HaskellFT}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.1\hbox {}}}{8}}
+\newlabel{fig:FT-Euler-tour}{{2}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces code for \lstinline `tree`,\lstinline `forest`,\lstinline `vertex` definitions and their empty cases}}{9}}
+\newlabel{fig:emptys}{{3}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces code for \lstinline `reroot` function}}{9}}
+\newlabel{fig:reroot}{{4}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}connected}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces the \textit  {connected} function, the basic query for dynamic trees and the core for \textit  {link} and \textit  {cut}}}{10}}
+\newlabel{fig:connected}{{5}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}link}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces the \textit  {link} function, reduces the size of the forest by one tree}}{11}}
+\newlabel{fig:link}{{6}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Auxiliar \textit  {linkTree} function, the \textit  {join} between two different trees}}{11}}
+\newlabel{fig:linkTree}{{7}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}cut}{11}}
+\citation{HaskellFT}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces The \textit  {cut} function increases the size of the forest $f$ by one tree}}{12}}
+\newlabel{fig:cut}{{8}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{12}}
+\newlabel{sec:Eval}{{4}{12}}
+\citation{Lazy-Gproc-Haskell}
+\citation{RAZ}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Auxiliary function \textit  {cutTree} \textit  {splits} the given tree in two}}{13}}
+\newlabel{fig:cutTree}{{9}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{13}}
+\newlabel{sec:RelWrk}{{5}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Sequence of \textit  {link}s, \textit  {cut}s, and \textit  {connected}s}}{14}}
+\newlabel{fig:plot1}{{10}{14}}
+\bibdata{./Refs/refs}
+\bibcite{DynamizingAlgos}{1}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and Future Work}{15}}
+\newlabel{sec:Concl}{{6}{15}}
+\bibcite{ParallelSets}{2}
+\bibcite{CVS-Demaine}{3}
+\bibcite{Lazy-Gproc-Haskell}{4}
+\bibcite{DSs-Online-Upd-MSTs}{5}
+\bibcite{HaskellMonoid}{6}
+\bibcite{RAZ}{7}
+\bibcite{Rand-DynGs-Algos}{8}
+\bibcite{HaskellFT}{9}
+\bibcite{FTs}{10}
+\bibcite{HaskellSet}{11}
+\bibcite{DS-DynTs}{12}
+\bibcite{WerneckR-PhD}{13}
+\bibcite{Monoids}{14}
+\bibstyle{splncs03}

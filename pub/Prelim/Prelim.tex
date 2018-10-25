@@ -38,7 +38,7 @@ data Set a    = Bin Size a (Set a) (Set a)
 \end{lstlisting}              
 %\end{verbatim}
 
-In Table~\ref{tab:Setfuncs} we show the set-functions we have incorporated in ETFT from \code{Data.Set}.
+In Table~\ref{tab:Setfuncs} we show the set-functions we have incorporated in \code{dynTsET} from \code{Data.Set}.
 \small
 \begin{table}
 \begin{center}
@@ -65,7 +65,7 @@ Functions \code{empty} and \code{union} are, in fact, the monoidal functions \co
 
 \subsection{Euler-tour tree} 
 
-Dealing with trees of different degree can be complicated. A simpler way to handle and represent trees of any degree is by an Euler tour. To represent a tree $t$, we replace every edge $\langle u,v \rangle$ of $t$ by two arcs $(u,v)$ and $(v,u)$, and add a loop $(v,v)$ to represent each vertex $v$. In this context, a tree $t$ can have at least one, and in general, many Euler tours. The size of an Euler tour \textit{et} of $t$ is $et(t) = 2v + 2e - 1$, where $v$ is the number of vertices of $t$ and $e$ its number of edges. We can represent an Euler tour in Haskell simply as a list of pairs, such in 
+Dealing with trees of different degree can be complicated. A simple way to handle and represent trees of any degree is by an Euler tour, that is, a sequence as in \cite{Rand-DynGs-Algos} and \cite{WerneckR-PhD}. To represent a tree $t$, we replace every edge $\langle u,v \rangle$ of $t$ by two arcs $(u,v)$ and $(v,u)$, and add a loop $(v,v)$ to represent each vertex $v$. In this context, a tree $t$ can have at least one, and in general, many Euler tours. The size of an Euler tour \textit{et} of $t$ is $et(t) = v + 2e $, where $v$ is the number of vertices of $t$ and $e$ its number of edges. We can represent an Euler tour in Haskell simply as a list of pairs, such in 
 
 %\begin{verbatim}
 \begin{lstlisting}
@@ -73,11 +73,24 @@ data EulerTour a = [(a,a)]
 \end{lstlisting}
 %\end{verbatim}
 
-We will see that represent tours in this way is efficient since they will be managed by the finger tree with performance explain shortly and in Section~\ref{sec:TechDes}. 
+By managing the tour with lists, we can perform insertion from the left (head) in $O(1)$ but remaining operations such insertion from the right, access, cutting, appending and inserting might take $O(n)$ per operation.
+On the other hand, representing tours through finger trees, performance per operation is improved up to $O(\log n)$ per operation amortised as we explain shortly and in Section~\ref{sec:TechDes}. 
+
+Our representation of $k$-trees through Euler-tour will not close up the tour with the first node as this avoids the uniqueness presence for such a node, as shown in Fig.~\ref{fig:Euler-tour}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.35]{./Images/Euler-tour} 
+\end{center}
+\caption{The $k$-tree (left) is represented as a sequence of size $v+2e$ (right). Notice we left out the final node-pair to preserve uniqueness}
+\label{fig:Euler-tour}
+\end{figure}
+
+
 
 \subsection{Finger tree} 
 
-We present Hinze and Paterson's non-strict version of finger trees \madd{(FTs)} \cite{FTs}, followed by the functions we have used for the ETFT.
+We present Hinze and Paterson's version of finger trees \madd{(FTs)} \cite{FTs}, followed by the functions we have used for the \code{dynTsET}.
 %\begin{verbatim}
 \begin{lstlisting}
 data FingerTree v a = Empty
@@ -93,32 +106,20 @@ data FingerTree v a = Empty
 \tcr{This reviewer can't help but think that there seems to be a lot of redundancy in the proposed data structure, as the Euler tour node pairs are present in both the sets and in the finger trees.}
 
 
-\code{Digit} type holds from one up to four elements of type \code{a}. \code{Node} type can hold two or three elements of type \code{a}. The recursive and nested definition of \code{FingerTree} forces the structure to be balanced by the types, instead of enforced it by code invariants. Finger trees are 2-3 trees where values are stored at the leaves, in our case an Euler tour formed by pairs of those values. To implement \textit{search}, \textit{insert} and \textit{lookup} efficiently, Hinze and Paterson \cite{FTs} added a monoidal annotation on the intermediate vertices, the \code {v} type.
+\code{Digit} type holds from one up to four elements of type \code{a}. \code{Node} type can hold two or three elements of type \code{a}. The recursive and nested definition of \code{FingerTree} forces the structure to be balanced by its types, instead of enforcing it by code invariants. Finger trees are 2-3 trees where values are stored at the leaves, in our case those leaves are the pairs representing an Euler tour. To implement \textit{updates} and \textit{lookups} efficiently, Hinze and Paterson \cite{FTs} added a monoidal annotation on the intermediate vertices, the \code {v} type.
 
-\small
-\begin{table}
+In figure Fig.~\ref{fig:FT-Euler-tour} we can see our example of the Euler-tour sequence in Fig.~\ref{fig:Euler-tour} managed by the data constructors described above.
+
+\begin{figure}
 \begin{center}
-\begin{tabular}{||l | l | c||} 
- \hline
- Function                           & Type                                              & Time complexity \\ 
- \hline\hline
- \texttt{viewl}                     & \texttt{(FT v a) $\to$ a $\to$ View a (FT v a)}   & $O(1)$ \\ 
- \texttt{viewr}                     & \texttt{(FT v a) $\to$ a $\to$ View a (FT v a)}   & $O(1)$ \\
- \hline
- \texttt{cons} ($\lhd$)             & \texttt{a $\to$ (FT v a) $\to$ (FT v a)}          & $O(1)$ \\ 
- \texttt{snoc} ($\rhd$)             & \texttt{a $\to$ (FT v a) $\to$ (FT v a)}          & $O(1)$ \\
- \hline
- \texttt{measure}                   & \texttt{a $\to$ v}                                & $O(1)$ \\
- \hline
- \texttt{split}                     & \texttt{(FT v a) $\to$ Split (FT v a) a (FT v a)} & $O(\log n)$ \\
- \texttt{concatenation} ($\bowtie$) & \texttt{(FT v a) $\to$ (FT v a) $\to$ (FT v a)}   & $O(\log \min (n,m))$ \\
- \hline   
-\end{tabular}
-\caption{Hinze's and Paterson finger tree main functions used for ETFT}
-\label{tab:FTfuncs} 
+\includegraphics[scale=0.35]{./Images/FT-Euler-tour} 
 \end{center}
-\end{table}
-\normalsize
+\caption{A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.\ref{fig:Euler-tour}}
+\label{fig:FT-Euler-tour}
+\end{figure}
+
+
+
 
 \tcb{SPLIT is not longer used, instead there is SEARCHFT, which aim is the same as SPLIT and hope it will be easier to explain}
 
