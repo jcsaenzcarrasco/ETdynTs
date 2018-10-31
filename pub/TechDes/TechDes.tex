@@ -1,7 +1,13 @@
 \section{dynTsET Design}
 \label{sec:TechDes}  
 
-We do not assume sequences representing Euler-tours are provided. Instead, we offer auxiliary functions that turn any-degree tree (and forest) into well-formed sequences. In Haskell, any-degree tree are also known as multiway or rose tree. Actually, there is a library that defines such trees, \code{Data.Tree}, in the Haskell community's central package archive (Hackage).
+
+In this section, we present the data types and the operations to manage dynamic trees through Euler-tour trees. Firstly, we describe how to convert any-degree tree into a Euler-tour tree. Secondly, assuming we are provided with Euler-tour trees, we stored them within the leaves of a finger tree. Also, we detail the functions for linking and cutting trees when performed in isolation. Finally, we incorporate the Euler-tour trees into the context of a forest. At this point, we describe the three operations regarded to dynamic trees: \connected, \link and \cut for trees (nodes and edges) within a forest. At any time, the number of nodes is fixed and every node is uniquely identified. Full source code is located at \url{https://github.com/jcsaenzcarrasco/ETdynTs}.
+
+
+\subsection{From $k$-degree tree to Euler-tour tree}
+
+In Haskell, any-degree tree is also known as multiway tree or rose tree. Actually, there is a library that defines such trees, \code{Data.Tree}, in the Haskell community's central package archive (Hackage).
 
 \begin{lstlisting}
 data Tree a = Node {
@@ -25,9 +31,9 @@ rt2et (Node x ts) = case ts of
      root   = [(x,x)] 
 \end{lstlisting} 
 
-Since \code{concat} and \code{++} take $O(n)$ where $n$ is the size of their arguments, \code{rt2et} takes $O(n^2)$. \tcr{Should we need to prove this ???}
+Since \code{concat} and \texttt{++} take $O(n)$ where $n$ is the size of the input tree, \code{rt2et} takes $O(n)$. \tcr{Should we need to prove this ???}
 
-The corresponding forest transformation to list of pairs is simply the application of \code{rt2et} to every element in the tree list. 
+The corresponding forest transformation to list of pairs is simply the application of \code{rt2et} to every element in the tree list. Because it requires a single traversal, \code{rt2et} requires $O(n)$ time, where $n$ is the number of elements in the forest.
 
 \begin{lstlisting}[mathescape] 
 rf2et :: (Eq a) $\Rightarrow$ Forest a $\to$ [[(a,a)]]
@@ -36,192 +42,90 @@ rf2et [Node x []] = [[(x,x)]]
 rf2et (t:ts)      = (rt2et t) : rf2et ts
 \end{lstlisting}
 
-Once a tree $t$ of any degree is turned into an Euler tour $et$, we are able to manage $et$ as a sequence. Since finger trees work efficiently on sequences, according to \cite{FTs}, we tailored the finger tree in order to support \link, \cut and \connected operations over unrooted trees following the corresponding properties and algorithm by Henzinger and King in \cite{Rand-DynGs-Algos}.
+Once a tree $t$ of any degree is turned into an Euler tour $et$, we are able to manage $et$ as a sequence. 
 
-Recall data type in Fig~\ref{fig:FTdatatype} works with finger trees of any type \code{a} constrained to the monoidal annotation of type \code{v}. In order to manipulate nodes and edges as Euler tours, we specialized the \dyntset types to handle  pairs, hence the underlying finger tree types are \code{Set (a,a)} for the monoidal annotation (previously \code{v}) and \code{(a,a)} for values on the leaves (previously \code{a}). 
 
-The full implementation of dynTsET\footnote{\url{https://github.com/jcsaenzcarrasco/ETdynTs}} contains the core functions for \code{link}ing, \code{cut}ting and asking for connectividad (\code{conn}) as well as the helper functions detailing the conversion between multiway trees and Euler-tours.
+\subsection{Euler-tour tree as finger trees of pairs}
 
-\tcb{SUBSECTION FOREST. Either here or before section 4.1}
+Since finger trees work efficiently on sequences, according to \cite{FTs}, we tailored the finger tree in order to support \link, \cut and \connected operations over unrooted trees following the procedures for modifying encodings (i.e. any-degree trees to Euler-tours) by Henzinger and King in \cite{Rand-DynGs-Algos}.
 
-For practical purposes we let forest and trees to be of type \code{Int} in this paper, but a polymorphic type can be extended easily.
+Recall from Figure~\ref{fig:FTdatatype}, the finger tree \code{data FingerTree v a}, has two polymorphic types, the first one (\code{v}) is the type of the monoidal annotation and the second (\code{a}) the type of the values stored at the leaves, which in our case is the sequence type. We have mentioned in the previous section that edges and nodes can be represented as pairs, therefore our values type is \code{(a,a)} for any type \code{a}. In this manner, a pair $(u,v)$ (atomic element in the sequence) represents a node, when $u = v$, and an edge when $u \neq v$. From here, every element in the sequence  can be located.
 
-We start with type definitions for nodes, trees, forests, and their empty instances as in : % Figure~\ref{fig:emptys}
+In the next sections, for practical reasons, we define our pairs of type \code(Int,Int). For the internal finger trees nodes (monoidal annotations), where searching take place, we define \code{Data.Set (a,a)} as our type. By doing so, we are able to take advantage from some set-like operations such as membership-test, insertion and union. 
+
+We define the set-insertion operation every time a pair (either edge or node) is added to an Euler-tour tree (i.e. finger tree). In Haskell, we can see this as
 \begin{lstlisting}[mathescape]
+import Data.FingerTree
+import qualified Data.Set as S
+
 type TreeEF   a = FingerTree (S.Set (a,a)) (a,a)
-type ForestEF a = FingerTree (S.Set (a,a)) (TreeEF a) 
 
-emptyForest :: Ord a => ForestEF a  
-emptyForest  = FingerTree.empty 
+instance (Ord a) $\Rightarrow$ Measured (S.Set (a,a)) (a,a) where 
+   measure (x,y) = S.insert (x,y) S.empty 
+\end{lstlisting} 
 
-emptyTree :: Ord a => TreeEF a 
-emptyTree  = FingerTree.empty 
+We shall see in Section~\ref{DoNotKnowYet} that \code{S.Set} can be easily replaced by another set alike data structure as long as this provides membership-testing, insertion, empty-set, set-union and search operations. Also in Section~\ref{sec:Eval} we shall analyse the differences in performance when the monoidal type is changed.
 
-instance (Ord a) => Measured (S.Set (a,a)) (a,a) where 
-   measure (x,y) = S.insert (x, y) S.empty 
-\end{lstlisting}   
-%\caption{code for \code{tree},\code{forest},\code{vertex} definitions and their empty cases}
-%\label{fig:emptys}
-%\end{figure}
+The set-union is already defined in \code{Data.Set} at its monoidal binary operation, therefore there is no need to define this in our proposal.
 
-Every element in the tree $t$ (leaves in the finger tree) is measurable by calling \code{measure}, which returns the set-insertion operation of the element $(v,u)$ into an empty set. Here \code{Data.Set} is imported qualified as \code{S}
 
-The \textit{root} of a tree $t$ returns a vertex $v$ or nothing if $t$ is empty:
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape]
-root :: FTInt $\to$ Maybe Vertex  
+\subsection{rooting and rerooting a tree}
+We shall see later in the definition of \link, \code{link} \cut, and \connected, that functions \root and \reroot are essential. We mentioned earlier that dynamic trees is about managing unrooted trees. By \root we refer to the entry point of any Euler-tour, which always starts in the form $(v,v)$ since it represents a node. By \emph{unrooted} tree we refer to the fact that any node in the tree can be its \root.
+
+Since any-size Euler-tour is represented from now on by a finger tree, we define our initial operation by calling the leftist element as the \root of it, through the function \code{viewl}
+\begin{lstlisting}[mathescape] 
+root :: Ord a $\Rightarrow$ TreeEF a $\to$ Maybe a  
 root tree = case viewl tree of
-  NoView   $\to$ Nothing
-  View x _ $\to$ Just $\$$ fst x
+  EmptyL   $\to$ Nothing
+  x :< _   $\to$ Just ( fst x )
 \end{lstlisting}
-%\end{verbatim}
-%\normalsize
 
-Time complexity of \code{root} is $O(1)$ since \code{viewl} performs $O(1)$ and we simply pattern matching over its results.
+We return the first element in the pair $(v,v)$ since any $v$ represents the node-root. Time complexity of \root is $O(1)$ since \code{viewl} performs $O(1)$ in the finger tree and we simply pattern match over its results.
 
-Then, \textit{rerooting} a tree $t$ according to vertex $v$ returns the same tree $t$ on which $v$ is the root, i.e. the first element in the sequence. This is useful when linking and cutting trees. Rerooting an empty or single tree is trivial (lines 3 and 4, Figure~\ref{fig:reroot}). 
-\begin{figure}
-%\begin{verbatim}
+Then, for \code{reroot}ing a tree we follow partially the second procedure by Henzinger and King in \cite{Rand-DynGs-Algos}, which states:
+\begin{displayquote}
+\emph{To change the root of \textit{T} from $r$ to $s$}: Let $o_s$ denote any occurrence of $s$. Splice out the first part of the sequence ending with the occurrence before $o_s$, remove its first occurrence ($o_r$), and tack the first part on to the end of the sequence, which now begins with $o_s$. Add a new occurrence $o_s$ to the end.
+\end{displayquote}
+
+So, instead of looking for $r$ (old root) occurrences, we focus only in the new root($s$). We splice out the first and second occurrences of node $s$ by simply searching for it as $(s,s)$ in the finger tree. Then, simply glue all the parts in order, that is, the new root first (leftist) followed by the second and first occurrences of $s$. This is denoted in the following snippet.
+
 \begin{lstlisting}[mathescape]
-reroot :: FTInt $\to$ Vertex $\to$ FTInt
-reroot tree vertex = case tree of 
- Empty       $\to$ Empty 
- (Single x)  $\to$ Single x
- tree        $\to$ case split (S.member root) S.empty tree of 
-                 NoSplit           $\to$ tree
-                 Split Empty _  _  $\to$ tree 
-                 Split tl    _  tr $\to$ let (View _ tX) = viewl tl 
-                                          tA          = tX $\rhd$ root 
-                                          tB          = root $\lhd$ tr 
-                                      in  tB $\bowtie$ tA 
- where root = (vertex,vertex) 
+reroot :: Ord a $\Rightarrow$ TreeEF a $\to$ a $\to$ TreeEF a 
+reroot tree node = case (FT.search pred tree) of
+   Position left _ right $\to$ rootTree $\lhd$ (right $\bowtie$ left)
+   _                     $\to$ tree
+ where rootTree      = (node,node)
+       pred before _ = (S.member rootTree) before
 \end{lstlisting} 
-%\end{verbatim} 
-\caption{code for \code{reroot} function}
-\label{fig:reroot}
-\end{figure}
-Lines 6 and 7 show the cases that $v$ is not in $t$ or is already the root, respectively in Figure~\ref{fig:reroot}. From the left subtree of the split (line 8), we simply ignore the first element derived from its \code{viewl} which is the old root, then we simply concatenate the tail and the head in that order altogether the new root inserted in both sides. That is, one \textit{split}, one \textit{concatenation} and two insertions \textit{cons,snoc}, turns to be $O(\log n)$ in the size of the tree $t$.  
 
+\tcr{PERFORMANCE of REROOT }\tcb{Operators $\lhd$, $\bowtie$ and \code{FT.search} take $O(\log n)$ amortised on finger trees. Since we are applying them only once, our \code{reroot} function also takes $O(\log n)$}. In case \code{reroot} is asked altogether with a node not in the tree, it simply returns the original \code{tree}.
 
-\subsection{connected} 
-It is the first of our dynamic tree operations and the core function for \textit{link} and \textit{cut}. It receives two vertices $u$ and $v$ and a forest $f$ as arguments, returning a boolean altogether with a tree or trees and their roots where applicable. It is based on a single \textit{split} per vertex. If the split succeeds, then a tree and its root are returned, otherwise nothing is returned. This initial step is called \code{search} and takes as much as $O(\log n)$ per split and $O(1)$ for the \textit{root}. Then \code{connected} pattern matches all the cases from \code{search} and compares whether or not the given vertices are in the same tree. 
+The following two functions, \code{linkTree} and \code{cutTree} are regarded to trees off a forest. Again, following Henzinger and King, first procedure in \cite{Rand-DynGs-Algos}:
+\begin{displayquote}
+\emph{To delete edge \{$a$,$b$\} from $T$:} Let $T_1$ and $T_2$ be the two trees that result, where $a \in$ $T_1$ and $b \in$ $T_2$. Let $o_{a_1}$, $o_{b_1}$, $o_{b_2}$ represent the occurrences encountered in the two traversals of \{$a,b$\}. If $o_{a_1} < o_{b_1}$ and $o_{b_1} < o_{b_2}$, then $o_{a_1} < o_{b_1} < o_{b_2} < o_{a_2}$. Thus, ET($T_2$) is given by the interval of ET($T$) $o_{b_1}$, \ldots, $o_{b_2}$ and ET($T_1$) is given by splicing out of ET($T$) the sequence $o_{b_1}$, \ldots, $o_{a_2}$. 
+\end{displayquote} 
 
-\begin{figure}
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape] 
-search :: Vertex $\to$ Forest $\to$ Maybe (FTInt, Vertex) 
-search v f = 
- case split (S.member (v,v)) S.empty f of 
-  NoSplit        $\to$ Nothing 
-  Split _ tree _ $\to$ Just (tree, fromJust $\$$ root tree) 
+Deleting an edge means \emph{cut}ting a tree through such edge. The following snippet shows the \code{cutTree} operation analogous to the above procedure :
+\begin{lstlisting}[mathescape]
+cutTree :: Ord a $\Rightarrow$ a $\to$ a $\to$ TreeEF a $\to$ Maybe (TreeEF a,TreeEF a) 
+cutTree u v tree = case FT.search predUV tree of
+ Position left _ right $\to$
+   case (FT.search predVU left ) of
+      Position leftL _ rightL $\to$  
+        Just (rightL, leftL $\bowtie$ right)
+      _                $\to$                    
+        case (FT.search predVU right) of
+          Position leftR _ rightR $\to$
+            Just (leftR, left $\bowtie$ rightR)
+          _ $\to$ Nothing 
+ _  $\to$ Nothing  
+ where
+   predUV before _ = (S.member (u,v)) before 
+   predVU before _ = (S.member (v,u)) before 
+\end{lstlisting}
 
-connected :: Vertex $\to$ Vertex $\to$ Forest $\to$ (Bool, Maybe PairTreeVertex) 
-connected x y f = 
- case (search x f, search y f) of 
-  (Nothing     , _           ) $\to$ (False, Nothing) 
-  (_           , Nothing     ) $\to$ (False, Nothing) 
-  (Just (tx,rx), Just (ty,ry)) $\to$ if rx == ry 
-                                   then (True,  Just(tx,rx,tx,rx))  
-                                   else (False, Just(tx,rx,ty,ry))  
-\end{lstlisting} 
-%\end{verbatim}
-\caption{the \textit{connected} function, the basic query for dynamic trees and the core for \textit{link} and \textit{cut}}
-\label{fig:connected}
-\end{figure}
-Following lines 9-14 in Figure~\ref{fig:connected}, the first two cases of \code{connected} occur when any of $u$ or $v$ are not members of $f$. Last two lines handle the restrictions for functions \textit{cut} and \textit{link} respectively. That is, if two vertices $u$ and $v$ are connected, then both have the same root of the same tree, preserving the \textit{cut} condition. The last line states the valid case for \textit{link}, that is, not connected $u$ and $v$ that belong to $f$, therefore \code{connected} also returns the corresponding trees and roots. Finally, we conclude that \code{connected} takes as much effort as \code{search}, $O(\log n)$, where $n$ is the number of vertices in the forest.
+The snippet quite follows the procedure. The pairs $(u,v)$ and $(v,u)$ are left out the resulting sequences in the wildcards in lines 3, 5 and 9. Since we search $(u,v)$ first, there are only two possibilities for $(v,u)$ to be part of. If it is on the left we build up $T_1$ from \code{rightL}, and $T_2$ from \code{leftL} and \code{right}. Otherwise $T_1$ is built from \code{leftR} and $T_2$ from \code{left} and \code{rightR}.
 
-\subsection{link}
-Performing a \textit{link} implies that given two vertices $u$ and $v$ and a forest $f$, $u$ and $v$ should belong to a different trees $t_u$ and $t_v$ in $f$. This condition is guarded by \code{connected}, in case of non existent $u$ or $v$ and no connection between, $f$ is simply returned. This will be useful when \code{link} is part of the unbound sequence of operations applied to a forest. The \textit{link} condition is stated and satisfied in the case analysis, lines 3-5 in Figure~\ref{fig:link}. 
-Now, we need to reduce the forest $f$ by one tree as $t_u$ and $t_v$ will be joined. Hence $t_u$ and $t_v$ are extracted from $f$ and dropped off (left apart with \code{_}), lines 7 and 8 in Figure~\ref{fig:link}. Finally, \code{linkAll} joins subforests \code{lf,rf} and inserts the new tree (\code{tree}) resulting from auxiliary function \code{linkTree}.  
-
-\begin{figure}
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape] 
-link :: Vertex $\to$ Vertex $\to$ Forest $\to$ Forest 
-link x y f = 
- case connected x y f of 
-  (False, Just (tx,rx,ty,ry)) $\to$ linkAll (linkTree x tx y ty) 
-  _                           $\to$ f 
- where 
-    Split lf' _ rf' = split (S.member (x,x)) S.empty f 
-    Split lf  _ rf  = split (S.member (y,y)) S.empty (lf' $\bowtie$ rf') 
-    linkAll tree    = tree $\lhd$ (lf $\bowtie$ rf) 
-\end{lstlisting} 
-%\end{verbatim}
-\caption{the \textit{link} function, reduces the size of the forest by one tree}
-\label{fig:link}
-\end{figure}
-
-Inserting the new tree into the new forest takes $O(1)$ due \code{cons}, but it is the computation of \code{linkTree} that takes $O(\log m)$, where $m$ is the size of the trees $t_u$ and $t_v$ as it applies two \code{reroot} and a concatenation, lines 4-6 in Figure~\ref{fig:linkTree}. Finally, joining the subforests derived from eliminating trees $t_u$ and $t_v$ takes three splits, lines 3, 7 and 8, which take $O(\log n)$ each and a concatenation, line 9 which also takes $O(\log n)$, where $n$ is the number of vertices in the forest $f$. In the worst case, if $f$ is formed by a single tree $t$ after linking, then $n$ and $m$ are equivalent.
-
-\begin{figure}
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape] 
-linkTree :: Vertex $\to$ FTInt $\to$ Vertex $\to$ FTInt $\to$ FTInt 
-linkTree u tu v tv =  
-   let 
-      from = (reroot tu u ) $\rhd$ (u,v)
-      to   = (reroot tv v ) $\rhd$ (v,u) 
-   in (from $\bowtie$ to ) $\rhd$ (u,u)  
-\end{lstlisting} 
-%\end{verbatim}
-\caption{Auxiliar \textit{linkTree} function, the \textit{join} between two different trees}
-\label{fig:linkTree}
-\end{figure}
-
-
-
-\subsection{cut}
-Unlike \textit{link}, the function \textit{cut} adds a new tree into the forest $f$. The condition for \textit{cut} to be valid, is that input vertices $u$ and $v$ in forest $f$ should also belong the same tree $t$. We also add the condition that a vertex can not be cut, just edges. The latter condition is guarded in line 3 in Figure~\ref{fig:cut} whereas former condition is preserved by pattern matching in lines 6 and 7 within the same figure. Like \textit{link}, function \textit{cut} will return the original forest $f$ if any of these conditions are not satisfied. Again, this helps the unbounded sequence of dynamic operations to be applied over $f$.
-
-
-\tcr{I miss a deeper discussion of the interplay of this use of the finger tree and the monoidal annotations. For example, the `reroot` operation should leave the set of edges invariant. Do the annotation on the top node have to be recalculated? Can it be avoided? Would it make a difference? }
-
-
-\begin{figure}
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape] 
-cut :: Vertex $\to$ Vertex $\to$ Forest $\to$ Forest 
-cut x y f  
- | x == y    = f  
- | otherwise = 
-    case connected x y f of 
-      (True, Just (tx,_,_,_)) $\to$ buildForest (cutTree x y tx) 
-      _                       $\to$ f 
- where 
-    buildForest (t2,t3) = t2 $\lhd$ (t3 $\lhd$ (lf $\bowtie$ rf)) 
-    Split lf _ rf       = split (S.member (x,x)) S.empty f 
-\end{lstlisting} 
-%\end{verbatim}
-\caption{The \textit{cut} function increases the size of the forest $f$ by one tree}
-\label{fig:cut}
-\end{figure}
-
-If the \textit{cut} function is successful, then tree $t$ is splitted into trees $t_u$ and $t_v$ according the input vertices $u$ and $v$, hence $t_u$ is the tree containing vertex $u$ but not $v$ and $t_v$ is the tree containing vertex $v$ but not $u$, denoted as trees \code{t2} and \code{t3} in Figure~\ref{fig:cut} respectively. Also, we need to remove $t$ from forest $f$. The insertion of $t_u$ and $t_v$ into $f$ and removal $t$ from $f$ is done in lines 9 and 10. Thus, function \textit{cut} takes two splits, one from \code{connected} in line 5, and from line 10, which turns in $O(\log n)$. Also, a concatenation is performed in rebuilding the forest $f$, in line 9, adding up another $O(\log n)$, where $n$ is the number of vertices in $f$. Additionally to this, auxiliary function \code{cutTree}, pictured in Figure~\ref{fig:cutTree}, takes one viewing (\code{viewr}) which is $O(1)$, then, one rerooting, two splits and one concatenation, each of $O(\log m)$, where $m$ is the number of elements in $t$. In the worst case, if $f$ contains a single tree $t$ before cutting, then $m$ and $n$ are equivalent.
-
-\begin{figure}
-%\small
-%\begin{verbatim}
-\begin{lstlisting}[mathescape] 
-cutTree :: Vertex $\to$ Vertex $\to$ FTInt $\to$ (FTInt,FTInt) 
-cutTree u v tree = case split (S.member (u,v)) S.empty tree of
- NoSplit $\to$ (tree,Empty) 
- _       $\to$ 
-  let treeU          = reroot tree u 
-      Split  treeA' _ right = split (S.member (u,v)) S.empty treeU
-      View _ treeA          = viewr treeA' 
-      Split treeB _ treeC   = split (S.member (v,u)) S.empty right 
-  in  (treeB, treeA $\bowtie$ treeC) 
-\end{lstlisting} 
-%\end{verbatim}
-\caption{Auxiliary function \textit{cutTree} \textit{splits} the given tree in two}
-\label{fig:cutTree}
-\end{figure}
-
+\tcr{PERFORMANCE of CUT }\tcb{Operator $\bowtie$ and function \code{FT.search} take $O(\log n)$ amortised on finger trees. Since we are applying them twice, our \code{cut} function also takes $O(\log n)$}. In case \code{cut} is called with with nodes belonging different components or the edge in matters in not found, then \code{cut} returns \code{Nothing}, which will be captured as failure in \cut within a forest operation.
 
 
