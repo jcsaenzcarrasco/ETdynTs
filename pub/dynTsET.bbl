@@ -1,69 +1,88 @@
-\begin{thebibliography}{10}
-\providecommand{\url}[1]{\texttt{#1}}
-\providecommand{\urlprefix}{URL }
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{ABH{\etalchar{+}}04}
 
-\bibitem{DynamizingAlgos}
-Acar, U.A., Blelloch, G.E., Harper, R., Vittes, J.L., Woo, S.L.M.: Dynamizing
-  static algorithms, with applications to dynamic trees and history
-  independence. In: Proceedings of the fifteenth annual ACM-SIAM symposium on
-  Discrete algorithms. pp. 531--540. Society for Industrial and Applied
-  Mathematics (2004)
+\bibitem[ABH{\etalchar{+}}04]{DynamizingAlgos}
+Umut~A Acar, Guy~E Blelloch, Robert Harper, Jorge~L Vittes, and Shan
+  Leung~Maverick Woo.
+\newblock Dynamizing static algorithms, with applications to dynamic trees and
+  history independence.
+\newblock In {\em Proceedings of the fifteenth annual ACM-SIAM symposium on
+  Discrete algorithms}, pages 531--540. Society for Industrial and Applied
+  Mathematics, 2004.
 
-\bibitem{ParallelSets}
-Blelloch, G., Ferizovic, D., Sun, Y.: Parallel ordered sets using join. arXiv
-  preprint arXiv:1602.02120  (2016)
+\bibitem[BFS16]{ParallelSets}
+Guy Blelloch, Daniel Ferizovic, and Yihan Sun.
+\newblock Parallel ordered sets using join.
+\newblock {\em arXiv preprint arXiv:1602.02120}, 2016.
 
-\bibitem{CVS-Demaine}
-Demaine, E., Langerman, S., Price, E.: Confluently persistent tries for
-  efficient version control. Algorithm Theory--SWAT 2008 pp. 160--172 (2008)
+\bibitem[DLC16]{Lazy-Gproc-Haskell}
+Philip Dexter, Yu~David Liu, and Kenneth Chiu.
+\newblock Lazy graph processing in haskell.
+\newblock In {\em Proceedings of the 9th International Symposium on Haskell},
+  pages 182--192. ACM, 2016.
 
-\bibitem{Lazy-Gproc-Haskell}
-Dexter, P., Liu, Y.D., Chiu, K.: Lazy graph processing in haskell. In:
-  Proceedings of the 9th International Symposium on Haskell. pp. 182--192. ACM
-  (2016)
+\bibitem[DLP08]{CVS-Demaine}
+Erik Demaine, Stefan Langerman, and Eric Price.
+\newblock Confluently persistent tries for efficient version control.
+\newblock {\em Algorithm Theory--SWAT 2008}, pages 160--172, 2008.
 
-\bibitem{DSs-Online-Upd-MSTs}
-Frederickson, G.N.: Data structures for on-line updating of minimum spanning
-  trees, with applications. SIAM Journal on Computing  14(4),  781--798 (1985)
+\bibitem[Fre85]{DSs-Online-Upd-MSTs}
+Greg~N Frederickson.
+\newblock Data structures for on-line updating of minimum spanning trees, with
+  applications.
+\newblock {\em SIAM Journal on Computing}, 14(4):781--798, 1985.
 
-\bibitem{HaskellMonoid}
-Gill, A.: {Monoid}.
-  \url{https://hackage.haskell.org/package/base-4.10.0.0/docs/Data-Monoid.html}
-  (2001), [Online; accessed 02-Dec-2017]
+\bibitem[Gil01]{HaskellMonoid}
+Andy Gill.
+\newblock {Monoid}.
+\newblock
+  \url{https://hackage.haskell.org/package/base-4.10.0.0/docs/Data-Monoid.html},
+  2001.
+\newblock [Online; accessed 02-Dec-2017].
 
-\bibitem{RAZ}
-Headley, K., Hammer, M.A.: The random access zipper: Simple, purely-functional
-  sequences. arXiv preprint arXiv:1608.06009  (2016)
+\bibitem[HH16]{RAZ}
+Kyle Headley and Matthew~A Hammer.
+\newblock The random access zipper: Simple, purely-functional sequences.
+\newblock {\em arXiv preprint arXiv:1608.06009}, 2016.
 
-\bibitem{Rand-DynGs-Algos}
-Henzinger, M.R., King, V.: Randomized fully dynamic graph algorithms with
-  polylogarithmic time per operation. Journal of the ACM (JACM)  46(4),
-  502--516 (1999)
+\bibitem[HK99]{Rand-DynGs-Algos}
+Monika~R Henzinger and Valerie King.
+\newblock Randomized fully dynamic graph algorithms with polylogarithmic time
+  per operation.
+\newblock {\em Journal of the ACM (JACM)}, 46(4):502--516, 1999.
 
-\bibitem{HaskellFT}
-Hinze, R., Paterson, R.: {Finger tree}.
-  \url{http://hackage.haskell.org/package/fingertree} (2006), [Online; accessed
-  02-Dec-2017]
+\bibitem[HP06a]{HaskellFT}
+Ralf Hinze and Ross Paterson.
+\newblock {Finger tree}.
+\newblock \url{http://hackage.haskell.org/package/fingertree}, 2006.
+\newblock [Online; accessed 02-Dec-2017].
 
-\bibitem{FTs}
-Hinze, R., Paterson, R.: Finger trees: a simple general-purpose data structure.
-  Journal of Functional Programming  16(02),  197--217 (2006)
+\bibitem[HP06b]{FTs}
+Ralf Hinze and Ross Paterson.
+\newblock Finger trees: a simple general-purpose data structure.
+\newblock {\em Journal of Functional Programming}, 16(02):197--217, 2006.
 
-\bibitem{HaskellSet}
-Leijen, D.: {Set}.
-  \url{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html}
-  (2002), [Online; accessed 02-Dec-2017]
+\bibitem[Lei02]{HaskellSet}
+Daan Leijen.
+\newblock {Set}.
+\newblock
+  \url{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html},
+  2002.
+\newblock [Online; accessed 02-Dec-2017].
 
-\bibitem{DS-DynTs}
-Sleator, D.D., Tarjan, R.E.: A data structure for dynamic trees. Journal of
-  computer and system sciences  26(3),  362--391 (1983)
+\bibitem[ST83]{DS-DynTs}
+Daniel~D Sleator and Robert~Endre Tarjan.
+\newblock A data structure for dynamic trees.
+\newblock {\em Journal of computer and system sciences}, 26(3):362--391, 1983.
 
-\bibitem{WerneckR-PhD}
-Werneck, R.F.: Design and Analysis of Data Structures for Dynamic Trees. Ph.D.
-  thesis, Princeton University (2006)
+\bibitem[Wer06]{WerneckR-PhD}
+Renato~F. Werneck.
+\newblock {\em Design and Analysis of Data Structures for Dynamic Trees}.
+\newblock PhD thesis, Princeton University, 2006.
 
-\bibitem{Monoids}
-Yorgey, B.A.: Monoids: theme and variations (functional pearl). ACM SIGPLAN
-  Notices  47(12),  105--116 (2012)
+\bibitem[Yor12]{Monoids}
+Brent~A Yorgey.
+\newblock Monoids: theme and variations (functional pearl).
+\newblock {\em ACM SIGPLAN Notices}, 47(12):105--116, 2012.
 
 \end{thebibliography}

@@ -1,6 +1,10 @@
 \section{dynTsET Design}
 \label{sec:TechDes}  
 
+\tcr{My main criticism of the paper is the presentation. While I appreciate the use of diagrams in the first half of the paper, high-level explanations are missing later. The paper does not do a very good job providing an intuition for how the data structure works. For example, I was struggling understanding the role of the monoidal set. The paper also explains too little of the background regarding used existing data structures and their realisation in Haskell libraries. For example, the interface to the finger tree ADT and the Measured type class. In general, most of the explanations are closely tight to the code but don’t give a high-level picture of what individual operations do in terms of the Euler tour. Given that there is plenty of space left in the paper, this could be improved in the final version.}
+
+\tcr{This reviewer can't help but think that there seems to be a lot of redundancy in the proposed data structure, as the Euler tour node pairs are present in both the sets and in the finger trees.}
+
 
 In this section, we present the data types and the operations to manage dynamic trees through Euler-tour trees. Firstly, we describe how to convert any-degree tree into a Euler-tour tree. Secondly, assuming we are provided with Euler-tour trees, we stored them within the leaves of a finger tree. Also, we detail the functions for linking and cutting trees when performed in isolation. Finally, we incorporate the Euler-tour trees into the context of a forest. At this point, we describe the three operations regarded to dynamic trees: \connected, \link and \cut for trees (nodes and edges) within a forest. At any time, the number of nodes is fixed and every node is uniquely identified. Full source code is located at \url{https://github.com/jcsaenzcarrasco/ETdynTs}.
 

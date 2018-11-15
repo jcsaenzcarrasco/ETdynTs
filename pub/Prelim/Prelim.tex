@@ -1,7 +1,7 @@
 \section{Preliminaries} 
 \label{sec:Prelim} 
 
-Our work and contribution relies mainly on three structures, a \textit{monoid}, a \textit{set} and a \textit{finger tree}, which are briefly described in the following subsections. 
+Our proposal, \dyntset, relies mainly on three structures, a \textit{monoid}, a \textit{set} and a \textit{finger tree}, which are briefly described in the following subsections. 
 
 \subsection{Monoid}
 
@@ -12,7 +12,7 @@ A \textit{monoid} is a triple $(S,\star,e)$, where $S$ is a set, $\star$ is a bi
 \item $x \star (y \star z) = (x \star y) \star z $, for all $x,y,z \in S$.  
 \end{enumerate}
 
-As an example of a Haskell implementation of a monoid we have:
+The type class Haskell implementation of a monoid we have:
 %\begin{verbatim}
 \begin{lstlisting}[mathescape]
 class Monoid  a where 
@@ -24,11 +24,11 @@ class Monoid  a where
 where the function \code{mempty} represents the element $e$ and the function \code{mappend} represents function $\star$. Detailed information about monoids within the functional programming can be found in \cite{Monoids}, and for the Haskell implementation at \cite{HaskellMonoid}.
 
 
-\subsection{Set as binary search tree}
-A \textit{binary search} tree (BST) is either a \textit{leaf} (also called a \code{tip}) or a vertex consisting of a \textit{value}, a \textit{left} BST and a \textit{right} BST. The height of the tree determines the time taken to perform every operation onto it, therefore the shorter the height the better, and this is done throughout a \textit{balancing scheme}. The study of BSTs is vast and there are several implementation around. In our case, a \textit{size balanced} is used. A detailed comparison and benchmarking is outside the scope of the present work.
+\subsection{Set as binary search tree} 
 
-\tcr{My main criticism of the paper is the presentation. While I appreciate the use of diagrams in the first half of the paper, high-level explanations are missing later. The paper does not do a very good job providing an intuition for how the data structure works. For example, I was struggling understanding the role of the monoidal set. The paper also explains too little of the background regarding used existing data structures and their realisation in Haskell libraries. For example, the interface to the finger tree ADT and the Measured type class. In general, most of the explanations are closely tight to the code but don’t give a high-level picture of what individual operations do in terms of the Euler tour. Given that there is plenty of space left in the paper, this could be improved in the final version.}
+A set, as a data structure, is used here for searching purposes, seen as testing membership within a specific set. Also, we look for incorporating elements into a set in order to increase such set for further look ups. This incorporation, comes in two flavours, either as single insertion or as the set-union operation. Finally, the presence of an empty set, a set with no elements at all, is crucial since it is the $unit$ when a set behaves as monoid. Also, an empty set is a starting point when a forest contains no trees.
 
+Internally, a set is implemented as binary search tree, also called BST. A BST is either a \textit{leaf} (also called a \code{tip}) or a vertex consisting of a \textit{value}, a \textit{left} BST and a \textit{right} BST. The height of the tree determines the time taken to perform every operation onto it, therefore the shorter the height the better, and this is done throughout a \textit{balancing scheme}. The study of BSTs is vast and there are several implementation around. In our case, a \textit{size balanced} is used. A detailed comparison and benchmarking is outside the scope of the present work.
 
 The following is an snippet of \code{Data.Set} \footnote{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html}
 %\begin{verbatim}
@@ -78,7 +78,7 @@ On the other hand, representing tours through finger trees, performance per oper
 
 Our representation of $k$-trees through Euler-tour will not close up the tour with the first node as this avoids the uniqueness presence for such a node, as shown in Fig.~\ref{fig:Euler-tour}.
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.35]{./Images/Euler-tour} 
 \end{center}
@@ -87,12 +87,24 @@ Our representation of $k$-trees through Euler-tour will not close up the tour wi
 \end{figure}
 
 
-
 \subsection{Finger tree} 
 
-We present Hinze and Paterson's version of finger trees \madd{(FTs)} \cite{FTs}, followed by the functions we have used for the \code{dynTsET}.
+We present Hinze and Paterson's version of finger trees \madd{(FTs)} \cite{FTs}. A finger tree is a 2-3-4 tree data structure which is always balanced. The structure is designed to store the elements of a sequence in the terminal nodes or leaves while intermediate nodes are dedicated for monoidal annotations. These annotations help out to achieve a specific task when storing or retrieving values in the leaves or when dealing with the tree itself such concatenation or splitting. One instance is random-access on lists. In order to speed up the time taken by a list for accessing the $n$th element, a finger tree stores the list elements on its leaves and the type \code{Sum Int} as its monoidal annotation. In this way, we can ask for a specific element provided its index in $O(\log n)$ rather than $O(n)$ time. This done through monoidal instances for \code{Sum}. The identity is defined as zero as in 
+\begin{lstlisting}[mathescape]
+instance Num a $\Rightarrow$ Monoid (Sum a) where
+        mempty = Sum 0
+\end{lstlisting}
 
-\begin{figure}
+and the corresponding binary operation on integers which preserves its identity (arithmetic addition),
+\begin{lstlisting}[mathescape]
+instance Num a $\Rightarrow$ Semigroup (Sum a) where
+        (<>) = coerce ((+) :: a $\to$ a $\to$ a)
+\end{lstlisting}
+
+
+The finger tree data type in Haskell is defined as
+
+\begin{figure}[H]
 \begin{lstlisting}
 data FingerTree v a = Empty
                     | Single a 
@@ -105,22 +117,18 @@ data FingerTree v a = Empty
 \label{fig:FTdatatype}
 \end{figure}
 
-\tcr{This reviewer can't help but think that there seems to be a lot of redundancy in the proposed data structure, as the Euler tour node pairs are present in both the sets and in the finger trees.}
-
 
 \code{Digit} type holds from one up to four elements of type \code{a}. \code{Node} type can hold two or three elements of type \code{a}. The recursive and nested definition of \code{FingerTree} forces the structure to be balanced by its types, instead of enforcing it by code invariants. Finger trees are 2-3 trees where values are stored at the leaves, in our case those leaves are the pairs representing an Euler tour. To implement \textit{updates} and \textit{lookups} efficiently, Hinze and Paterson \cite{FTs} added a monoidal annotation on the intermediate vertices, the \code {v} type.
 
-In figure Fig.~\ref{fig:FT-Euler-tour} we can see our example of the Euler-tour sequence in Fig.~\ref{fig:Euler-tour} managed by the data constructors described above.
+In Fig.~\ref{fig:FT-Euler-tour} we can see our example of the Euler-tour sequence in Fig.~\ref{fig:Euler-tour} managed by the data constructors described above.
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.35]{./Images/FT-Euler-tour} 
 \end{center}
 \caption{A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.\ref{fig:Euler-tour}}
 \label{fig:FT-Euler-tour}
 \end{figure}
-
-
 
 
 \tcb{SPLIT is not longer used, instead there is SEARCHFT, which aim is the same as SPLIT and hope it will be easier to explain}
