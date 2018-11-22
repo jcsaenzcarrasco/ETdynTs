@@ -28,7 +28,7 @@ where the function \code{mempty} represents the element $e$ and the function \co
 
 A set, as a data structure, is used here for searching purposes, seen as testing membership within a specific set. Also, we look for incorporating elements into a set in order to increase such set for further look ups. This incorporation, comes in two flavours, either as single insertion or as the set-union operation. Finally, the presence of an empty set, a set with no elements at all, is crucial since it is the $unit$ when a set behaves as monoid. Also, an empty set is a starting point when a forest contains no trees.
 
-Internally, a set is implemented as binary search tree, also called BST. A BST is either a \textit{leaf} (also called a \code{tip}) or a vertex consisting of a \textit{value}, a \textit{left} BST and a \textit{right} BST. The height of the tree determines the time taken to perform every operation onto it, therefore the shorter the height the better, and this is done throughout a \textit{balancing scheme}. The study of BSTs is vast and there are several implementation around. In our case, a \textit{size balanced} is used. A detailed comparison and benchmarking is outside the scope of the present work.
+Internally, a set is implemented as binary search tree, also called BST. A BST is either a \textit{leaf} (also called a \code{tip}) or a vertex consisting of a \textit{value}, a \textit{left} BST and a \textit{right} BST. The height of the tree determines the time taken to perform every operation onto it, therefore the shorter the height the better, and this is done throughout a \textit{balancing scheme}. The study of BSTs is vast and there are several implementation around. In our case, a \textit{size balanced} and a \textit{pairing hashed} are used. A detailed comparison and benchmarking is outside the scope of the present work.
 
 The following is an snippet of \code{Data.Set} \footnote{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html}
 %\begin{verbatim}
@@ -40,7 +40,7 @@ data Set a    = Bin Size a (Set a) (Set a)
 
 In Table~\ref{tab:Setfuncs} we show the set-functions we have incorporated in \code{dynTsET} from \code{Data.Set}.
 \small
-\begin{table}
+\begin{table}[H]
 \begin{center}
 \begin{tabular}{||l | l | c||} 
  \hline
@@ -58,6 +58,7 @@ In Table~\ref{tab:Setfuncs} we show the set-functions we have incorporated in \c
 \caption{Leijen's implementation of \code{Data.Set} \cite{HaskellSet}, based on \cite{ParallelSets}}
 \label{tab:Setfuncs} 
 \end{center}
+where $n$ and $m$ are the sizes of the largest and smallest sets respectively
 \end{table}
 \normalsize
 
@@ -113,12 +114,11 @@ data FingerTree v a = Empty
                            FingerTree v (Node v a) 
                            Digit a
 \end{lstlisting}                           
-\caption{Data type of the finger tree by Hinze and Ross}
+\caption{Data type of the finger tree by Hinze and Paterson}
 \label{fig:FTdatatype}
 \end{figure}
 
-
-\code{Digit} type holds from one up to four elements of type \code{a}. \code{Node} type can hold two or three elements of type \code{a}. The recursive and nested definition of \code{FingerTree} forces the structure to be balanced by its types, instead of enforcing it by code invariants. Finger trees are 2-3 trees where values are stored at the leaves, in our case those leaves are the pairs representing an Euler tour. To implement \textit{updates} and \textit{lookups} efficiently, Hinze and Paterson \cite{FTs} added a monoidal annotation on the intermediate vertices, the \code {v} type.
+\code{Digit} type holds from one up to four elements of type \code{a}. \code{Node} type can hold two or three elements of type \code{a}. The recursive and nested definition of \code{FingerTree} forces the structure to be balanced by its types, instead of enforcing it by code invariants. In our case, the leaves of a finger tree stores pairs of nodes or vertices representing an Euler tour. To implement \textit{updates} and \textit{lookups} efficiently, Hinze and Paterson \cite{FTs} added a monoidal annotation on the intermediate vertices, the \code {v} type.
 
 In Fig.~\ref{fig:FT-Euler-tour} we can see our example of the Euler-tour sequence in Fig.~\ref{fig:Euler-tour} managed by the data constructors described above.
 
@@ -130,6 +130,58 @@ In Fig.~\ref{fig:FT-Euler-tour} we can see our example of the Euler-tour sequenc
 \label{fig:FT-Euler-tour}
 \end{figure}
 
+Since the backbone of our structure \dyntset is actually a Hinze's and Paterson finger tree \cite{FTs}, we show the functions involved in our proposal, those to deal with inserting, cutting, appending and accessing finger trees. There are plenty of additional functions from finger trees we do not cover and that can be reached at \url{http://hackage.haskell.org/package/fingertree-0.1.4.1/docs/Data-FingerTree.html}.
+
+\small
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{||l | l | c||} 
+ \hline
+ Function         & Type                                   & 
+      \begin{tabular}{c} Time complexity \\ 
+                         (amortised bounds)
+      \end{tabular} \\
+ \hline\hline
+ \texttt{viewl}   & 
+      \begin{tabular}{l} \texttt{FingerTree v a}   \\ 
+                         \texttt{$\to$ ViewL (FingerTree v a)  } 
+      \end{tabular}
+                  & $O(1)$ \\ 
+ \hline
+ \texttt{search}  & 
+      \begin{tabular}{l} \texttt{(v $\to$ v $\to$ Bool)}   \\ 
+                         \texttt{$\to$ FingerTree v a  }   \\ 
+                         \texttt{$\to$ SearchResult v a  } 
+      \end{tabular}
+          & $O(\log(min(i,n-i)))$  \\ 
+ \hline
+ \texttt{$\lhd$} (ins. from left) & 
+      \begin{tabular}{l} \texttt{a $\to$ FingerTree v a} \\
+                         \texttt{$\to$ FingerTree v a} 
+      \end{tabular}
+          & $O(1)$                \\
+ \hline
+ \texttt{$\rhd$} (ins. from right) & 
+      \begin{tabular}{l} \texttt{FingerTree v a $\to$ a} \\
+                         \texttt{$\to$ FingerTree v a} 
+      \end{tabular}
+          & $O(1)$                \\
+ \hline
+ \texttt{$\bowtie$} (concatenation) & 
+      \begin{tabular}{l} \texttt{FingerTree v a} \\
+                         \texttt{$\to$ FingerTree v a} \\
+                         \texttt{$\to$ FingerTree v a} 
+      \end{tabular}
+          & $O(\log ( min(m,n) ))$         \\
+ \hline
+\end{tabular}
+\caption{Hinze's and Paterson implementation of \code{Data.FingerTree} \cite{FTsURL}, based on \cite{FTs}}
+\label{tab:FTfuncs} 
+\end{center}
+\end{table}
+\normalsize
+
+where $n$ is the size of the largest sequence, $m$ is the size of the smaller sequence (i.e. when concatenating) and $i$ is the index of the element when searching. 
 
 \tcb{SPLIT is not longer used, instead there is SEARCHFT, which aim is the same as SPLIT and hope it will be easier to explain}
 

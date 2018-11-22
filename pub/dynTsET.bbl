@@ -62,6 +62,14 @@ Ralf Hinze and Ross Paterson.
 \newblock Finger trees: a simple general-purpose data structure.
 \newblock {\em Journal of Functional Programming}, 16(02):197--217, 2006.
 
+\bibitem[HP10]{FTsURL}
+Ralf Hinze and Ross Paterson.
+\newblock \texttt{Data.FingerTree}.
+\newblock
+  \url{http://hackage.haskell.org/package/fingertree-0.1.4.1/docs/Data-FingerTree.html#g:4},
+  2010.
+\newblock [Online; accessed 22-November-2018].
+
 \bibitem[Lei02]{HaskellSet}
 Daan Leijen.
 \newblock {Set}.

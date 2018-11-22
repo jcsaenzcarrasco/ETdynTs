@@ -37,13 +37,14 @@ The contribution of this paper is to give first work-optimal bounds for managing
  \texttt{cutTree} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Tree} $\to$ \texttt{(Tree,Tree)} & $O(\log n)$ \\
  \hline
  \texttt{conn} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Bool} & $O(\log n)$ \\ 
- \texttt{link} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Forest} & $O(\log n)$ \\
+ \texttt{link} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Forest} & $O(m\log n)$ \\
  \texttt{cut} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Forest} & $O(\log n)$ \\
  \hline
  \texttt{reroot} & \texttt{Tree} $\to$ \texttt{Vertex} $\to$ \texttt{Tree} & $O(\log n)$ \\
  \texttt{root} & \texttt{Tree} $\to$ \texttt{Maybe(Vertex)} & $O(1)$ \\
  \hline   
 \end{tabular}
+where $n$ and $m$ are the corresponding sizes of the trees involved; when $linking$ is performed, then the constraint $m \leq n$ should taken into account
 \end{center}
 \normalsize 
 

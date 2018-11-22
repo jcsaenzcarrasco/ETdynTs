@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.17)  15 NOV 2018 18:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.17)  22 NOV 2018 11:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -376,21 +376,21 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 File: ./Images/Euler-tour.png Graphic file (type png)
 
 <use ./Images/Euler-tour.png>
-Package pdftex.def Info: ./Images/Euler-tour.png used on input line 83.
+Package pdftex.def Info: ./Images/Euler-tour.png used on input line 84.
 (pdftex.def)             Requested size: 351.66908pt x 121.20462pt.
 
-Overfull \hbox (6.66908pt too wide) in paragraph at lines 83--84
+Overfull \hbox (6.66908pt too wide) in paragraph at lines 84--85
  [] 
  []
 
 [6]
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 101.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 102.
 
  (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 101.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 102.
  [7 <./Images/Euler-tour.png>] <./Images/FT-Euler-tour.png, id=51, 529.98pt x 5
 23.9575pt>
 File: ./Images/FT-Euler-tour.png Graphic file (type png)
@@ -398,28 +398,33 @@ File: ./Images/FT-Euler-tour.png Graphic file (type png)
 <use ./Images/FT-Euler-tour.png>
 Package pdftex.def Info: ./Images/FT-Euler-tour.png used on input line 127.
 (pdftex.def)             Requested size: 185.49577pt x 183.38786pt.
-) (./TechDes/TechDes.tex
+
+Overfull \hbox (23.3049pt too wide) in paragraph at lines 138--178
+ [] 
+ []
+
+[8 <./Images/FT-Euler-tour.png>]) (./TechDes/TechDes.tex [9]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [8 <./Images/FT-Euler-tour.png>]
-Overfull \hbox (0.83339pt too wide) in paragraph at lines 31--32
+ [10]
+Overfull \hbox (0.83339pt too wide) in paragraph at lines 55--56
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[9]
-Overfull \hbox (2.52827pt too wide) in paragraph at lines 58--59
+
+Overfull \hbox (2.52827pt too wide) in paragraph at lines 82--83
 []\OT1/cmr/m/n/10 In the next sec-tions, for prac-ti-cal rea-sons, we de-fine o
 ur pairs of type [][][]Int,Int).
  []
 
-[10]
-
-LaTeX Warning: Reference `DoNotKnowYet' on page 11 undefined on input line 71.
-
 [11]
-Overfull \hbox (3.0206pt too wide) in paragraph at lines 105--106
+
+LaTeX Warning: Reference `DoNotKnowYet' on page 12 undefined on input line 95.
+
+[12]
+Overfull \hbox (3.0206pt too wide) in paragraph at lines 129--130
 [][]\OT1/cmr/m/n/10 PERFORMANCE of RE-ROOT [][]\OT1/cmr/m/it/10 Op-er-a-tors $\
 U/msa/m/n/10 C$\OT1/cmr/m/it/10 , $\OML/cmm/m/it/10 .[]/$ \OT1/cmr/m/it/10 and 
 [][][][][][][][][] take $\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 ([] \OML/cmm/m/it/10
@@ -427,53 +432,62 @@ U/msa/m/n/10 C$\OT1/cmr/m/it/10 , $\OML/cmm/m/it/10 .[]/$ \OT1/cmr/m/it/10 and
  []
 
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 109.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 133.
 
-Overfull \hbox (1.57701pt too wide) in paragraph at lines 133--134
+Overfull \hbox (1.57701pt too wide) in paragraph at lines 157--158
 [][]\OT1/cmr/m/n/10 PERFORMANCE of CUT [][]\OT1/cmr/m/it/10 Op-er-a-tor $\OML/c
 mm/m/it/10 .[]/$ \OT1/cmr/m/it/10 and func-tion [][][][][][][][][] take $\OML/c
 mm/m/it/10 O\OT1/cmr/m/n/10 ([] \OML/cmm/m/it/10 n\OT1/cmr/m/n/10 )$
  []
 
-) (./Eval/Eval.tex [12] <./Images/plot1.pdf, id=70, 505.89pt x 505.89pt>
+[13]) (./Eval/Eval.tex <./Images/plot1.pdf, id=74, 505.89pt x 505.89pt>
 File: ./Images/plot1.pdf Graphic file (type pdf)
 
 <use ./Images/plot1.pdf>
 Package pdftex.def Info: ./Images/plot1.pdf used on input line 15.
 (pdftex.def)             Requested size: 278.24034pt x 278.24034pt.
- [13 <./Images/plot1.pdf>]) (./RelWrk/RelWrk.tex)
-(./Concl/Concl.tex [14]
+) (./RelWrk/RelWrk.tex [14] [15 <./Images/plot1.pdf>])
+(./Concl/Concl.tex
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
-) (./dynTsET.bbl
+) (./dynTsET.bbl [16]
 Underfull \hbox (badness 1881) in paragraph at lines 44--47
 \OT1/cmr/m/n/10 zip-per: Sim-ple, purely-functional se-quences.  \OT1/cmr/m/it/
 10 arXiv preprint
  []
 
-[15]
-Underfull \hbox (badness 1043) in paragraph at lines 66--72
+
+Underfull \hbox (badness 2042) in paragraph at lines 66--72
+[]\OT1/cmr/m/n/10 Ralf Hinze and Ross Pa-ter-son.  \OT1/cmtt/m/n/10 Data.Finger
+Tree\OT1/cmr/m/n/10 .  $\OT1/cmtt/m/n/10 http :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--72
+\OT1/cmtt/m/n/10 / / hackage . haskell . org / package / fingertree-[]0 . 1 . 4
+ . 1 / docs /
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 74--80
 []\OT1/cmr/m/n/10 Daan Lei-jen.  Set.  $\OT1/cmtt/m/n/10 https : / / hackage . 
 haskell . org / package /
  []
 
-) [16] (./dynTsET.aux)
+[17]) [18] (./dynTsET.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 6137 strings out of 493054
- 82899 string characters out of 6134760
- 210428 words of memory out of 5000000
- 9504 multiletter control sequences out of 15000+600000
+ 6148 strings out of 493054
+ 83034 string characters out of 6134760
+ 214428 words of memory out of 5000000
+ 9515 multiletter control sequences out of 15000+600000
  14758 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,11n,42p,1420b,1492s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,15n,42p,1420b,1482s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
@@ -499,10 +513,10 @@ onts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2015/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2015/texmf-dist/fonts
 /type1/public/amsfonts/latxfont/lcircle1.pfb></usr/local/texlive/2015/texmf-dis
 t/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on dynTsET.pdf (16 pages, 827410 bytes).
+Output written on dynTsET.pdf (18 pages, 835552 bytes).
 PDF statistics:
- 366 PDF objects out of 1000 (max. 8388607)
- 266 compressed objects within 3 object streams
+ 372 PDF objects out of 1000 (max. 8388607)
+ 270 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
