@@ -27,6 +27,7 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Leijen's implementation of \lstinline `Data.Set` \cite  {HaskellSet}, based on \cite  {ParallelSets}}}{6}}
 \newlabel{tab:Setfuncs}{{1}{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Euler-tour tree}{6}}
+\newlabel{sec:ETt}{{2.3}{6}}
 \citation{FTs}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The $k$-tree (left) is represented as a sequence of size $v+2e$ (right). Notice we left out the final node-pair to preserve uniqueness}}{7}}
 \newlabel{fig:Euler-tour}{{1}{7}}
@@ -41,7 +42,6 @@
 \newlabel{fig:FTdatatype}{{2}{8}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.1\hbox {}}}{8}}
 \newlabel{fig:FT-Euler-tour}{{3}{8}}
-\citation{FTsURL}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Hinze's and Paterson implementation of \lstinline `Data.FingerTree` \cite  {FTsURL}, based on \cite  {FTs}}}{9}}
 \newlabel{tab:FTfuncs}{{2}{9}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}dynTsET Design}{9}}
@@ -49,24 +49,34 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}From $k$-degree tree to Euler-tour tree}{10}}
 \citation{FTs}
 \citation{Rand-DynGs-Algos}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Euler-tour tree as finger trees of pairs}{11}}
+\citation{FTsURL}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Euler-tour tree as finger tree of pairs with a set of pairs as monoidal annotation}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces \ensuremath  {\mathsf  {dynTsET}}\xspace  types and performances}}{12}}
+\newlabel{tab:dyntsetFTfuncs}{{3}{12}}
 \citation{Rand-DynGs-Algos}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}rooting and rerooting a tree}{12}}
 \citation{Rand-DynGs-Algos}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}rooting and rerooting a tree}{13}}
+\citation{Rand-DynGs-Algos}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}linking and cutting trees off the forest}{14}}
+\citation{DS-DynTs}
+\citation{WerneckR-PhD}
+\citation{Rand-DynGs-Algos}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}\ensuremath  {\mathsf  {link}}\xspace  , \ensuremath  {\mathsf  {cut}}\xspace  and \ensuremath  {\mathsf  {conn}}\xspace  within a forest}{15}}
 \citation{HaskellFT}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{18}}
+\newlabel{sec:Eval}{{4}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sequence of \textit  {link}s, \textit  {cut}s, and \textit  {connected}s}}{19}}
+\newlabel{fig:plot1}{{4}{19}}
 \citation{Lazy-Gproc-Haskell}
 \citation{RAZ}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{14}}
-\newlabel{sec:Eval}{{4}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{14}}
-\newlabel{sec:RelWrk}{{5}{14}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sequence of \textit  {link}s, \textit  {cut}s, and \textit  {connected}s}}{15}}
-\newlabel{fig:plot1}{{4}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{20}}
+\newlabel{sec:RelWrk}{{5}{20}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{20}}
+\newlabel{sec:Concl}{{6}{20}}
+\newlabel{sec:discussion}{{6}{20}}
+\citation{FTsURL}
 \bibdata{./Refs/refs}
 \bibcite{DynamizingAlgos}{{ABH{$^{+}$}04}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{16}}
-\newlabel{sec:Concl}{{6}{16}}
-\newlabel{sec:discussion}{{6}{16}}
 \bibcite{ParallelSets}{{BFS16}{}{{}}{{}}}
 \bibcite{Lazy-Gproc-Haskell}{{DLC16}{}{{}}{{}}}
 \bibcite{CVS-Demaine}{{DLP08}{}{{}}{{}}}

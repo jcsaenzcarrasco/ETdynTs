@@ -65,7 +65,7 @@ where $n$ and $m$ are the sizes of the largest and smallest sets respectively
 Functions \code{empty} and \code{union} are, in fact, the monoidal functions \code{mempty} and \code{mappend} respectively. 
 
 \subsection{Euler-tour tree} 
-
+\label{sec:ETt}
 Dealing with trees of different degree can be complicated. A simple way to handle and represent trees of any degree is by an Euler tour, that is, a sequence as in \cite{Rand-DynGs-Algos} and \cite{WerneckR-PhD}. To represent a tree $t$, we replace every edge $\langle u,v \rangle$ of $t$ by two arcs $(u,v)$ and $(v,u)$, and add a loop $(v,v)$ to represent each vertex $v$. In this context, a tree $t$ can have at least one, and in general, many Euler tours. The size of an Euler tour \textit{et} of $t$ is $et(t) = v + 2e $, where $v$ is the number of vertices of $t$ and $e$ its number of edges. We can represent an Euler tour in Haskell simply as a list of pairs, such in 
 
 %\begin{verbatim}
