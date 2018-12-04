@@ -22,14 +22,17 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Set as binary search tree}{5}}
 \citation{HaskellSet}
 \citation{ParallelSets}
+\citation{HaskellSet}
+\citation{ParallelSets}
 \citation{Rand-DynGs-Algos}
 \citation{WerneckR-PhD}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Leijen's implementation of \lstinline `Data.Set` \cite  {HaskellSet}, based on \cite  {ParallelSets}}}{6}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Leijen's implementation of \lstinline `Data.Set` \cite  {HaskellSet}, based on \cite  {ParallelSets}\relax }}{6}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{tab:Setfuncs}{{1}{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Euler-tour tree}{6}}
 \newlabel{sec:ETt}{{2.3}{6}}
 \citation{FTs}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The $k$-tree (left) is represented as a sequence of size $v+2e$ (right). Notice we left out the final node-pair to preserve uniqueness}}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The $k$-tree (left) is represented as a sequence of size $v+2e$ (right). Notice we left out the final node-pair to preserve uniqueness\relax }}{7}}
 \newlabel{fig:Euler-tour}{{1}{7}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Finger tree}{7}}
 \citation{FTs}
@@ -38,11 +41,11 @@
 \citation{FTs}
 \citation{FTsURL}
 \citation{FTs}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Data type of the finger tree by Hinze and Paterson}}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Data type of the finger tree by Hinze and Paterson\relax }}{8}}
 \newlabel{fig:FTdatatype}{{2}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.1\hbox {}}}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A finger tree (FT) holding the sequence (Euler-tour) that represents the $k$-tree in Fig.1\hbox {}\relax }}{8}}
 \newlabel{fig:FT-Euler-tour}{{3}{8}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Hinze's and Paterson implementation of \lstinline `Data.FingerTree` \cite  {FTsURL}, based on \cite  {FTs}}}{9}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Hinze's and Paterson implementation of \lstinline `Data.FingerTree` \cite  {FTsURL}, based on \cite  {FTs}\relax }}{9}}
 \newlabel{tab:FTfuncs}{{2}{9}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}dynTsET Design}{9}}
 \newlabel{sec:TechDes}{{3}{9}}
@@ -51,7 +54,7 @@
 \citation{Rand-DynGs-Algos}
 \citation{FTsURL}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Euler-tour tree as finger tree of pairs with a set of pairs as monoidal annotation}{11}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces \ensuremath  {\mathsf  {dynTsET}}\xspace  types and performances}}{12}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces \ensuremath  {\mathsf  {dynTsET}}\xspace  types and performances\relax }}{12}}
 \newlabel{tab:dyntsetFTfuncs}{{3}{12}}
 \citation{Rand-DynGs-Algos}
 \citation{Rand-DynGs-Algos}
@@ -62,33 +65,58 @@
 \citation{WerneckR-PhD}
 \citation{Rand-DynGs-Algos}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5}\ensuremath  {\mathsf  {link}}\xspace  , \ensuremath  {\mathsf  {cut}}\xspace  and \ensuremath  {\mathsf  {conn}}\xspace  within a forest}{15}}
-\citation{HaskellFT}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Evaluation}{18}}
 \newlabel{sec:Eval}{{4}{18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sequence of \textit  {link}s, \textit  {cut}s, and \textit  {connected}s}}{19}}
-\newlabel{fig:plot1}{{4}{19}}
-\citation{Lazy-Gproc-Haskell}
+\citation{HaskellFT}
+\citation{HaskellSet}
+\citation{HaskellEdison}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Setup}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Data structure}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Incremental operations}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sequence of {\ensuremath  {\mathsf  {link}}\xspace  }s from empty forest up to a single tree in such forest\relax }}{20}}
+\newlabel{fig:incLink}{{4}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Fully dynamic operations}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Time taken by operation, and interleaved \ensuremath  {\mathsf  {link}}\xspace  and \ensuremath  {\mathsf  {cut}}\xspace  \relax }}{21}}
+\newlabel{fig:EachOp}{{5}{21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Time taken when \ensuremath  {\mathsf  {link}}\xspace  and \ensuremath  {\mathsf  {cut}}\xspace  are interleaved with different forest sizes\relax }}{22}}
+\newlabel{fig:EachOp}{{6}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Selection of the set data structure}{22}}
 \citation{RAZ}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{20}}
-\newlabel{sec:RelWrk}{{5}{20}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{20}}
-\newlabel{sec:Concl}{{6}{20}}
-\newlabel{sec:discussion}{{6}{20}}
-\citation{FTsURL}
+\citation{HaskellRAZ}
+\citation{HaskellLC}
+\citation{LittleBook}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Dynamic operations through different sets structures as monoidal annotations\relax }}{23}}
+\newlabel{fig:plotSets}{{7}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{23}}
+\newlabel{sec:RelWrk}{{5}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Functional Sequence}{23}}
+\citation{HaskellET}
+\citation{TreeContraction}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Dynamic trees}{24}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{24}}
+\newlabel{sec:Concl}{{6}{24}}
+\newlabel{sec:discussion}{{6}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Final remarks}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Further work}{25}}
 \bibdata{./Refs/refs}
 \bibcite{DynamizingAlgos}{{ABH{$^{+}$}04}{}{{}}{{}}}
 \bibcite{ParallelSets}{{BFS16}{}{{}}{{}}}
-\bibcite{Lazy-Gproc-Haskell}{{DLC16}{}{{}}{{}}}
 \bibcite{CVS-Demaine}{{DLP08}{}{{}}{{}}}
 \bibcite{DSs-Online-Upd-MSTs}{{Fre85}{}{{}}{{}}}
 \bibcite{HaskellMonoid}{{Gil01}{}{{}}{{}}}
 \bibcite{RAZ}{{HH16}{}{{}}{{}}}
 \bibcite{Rand-DynGs-Algos}{{HK99}{}{{}}{{}}}
-\bibcite{HaskellFT}{{HP06a}{}{{}}{{}}}
-\bibcite{FTs}{{HP06b}{}{{}}{{}}}
+\bibcite{FTs}{{HP06}{}{{}}{{}}}
 \bibcite{FTsURL}{{HP10}{}{{}}{{}}}
-\bibcite{HaskellSet}{{Lei02}{}{{}}{{}}}
+\bibcite{HaskellFT}{{HP18}{}{{}}{{}}}
+\bibcite{HaskellLC}{{Kme17}{}{{}}{{}}}
+\bibcite{HaskellSet}{{Lei17}{}{{}}{{}}}
+\bibcite{TreeContraction}{{MM15}{}{{}}{{}}}
+\bibcite{HaskellET}{{Mor18}{}{{}}{{}}}
+\bibcite{HaskellEdison}{{Oka18}{}{{}}{{}}}
 \bibcite{DS-DynTs}{{ST83}{}{{}}{{}}}
+\bibcite{LittleBook}{{Tar83}{}{{}}{{}}}
 \bibcite{WerneckR-PhD}{{Wer06}{}{{}}{{}}}
+\bibcite{HaskellRAZ}{{Xia18}{}{{}}{{}}}
 \bibcite{Monoids}{{Yor12}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers

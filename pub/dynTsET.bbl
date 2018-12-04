@@ -15,12 +15,6 @@ Guy Blelloch, Daniel Ferizovic, and Yihan Sun.
 \newblock Parallel ordered sets using join.
 \newblock {\em arXiv preprint arXiv:1602.02120}, 2016.
 
-\bibitem[DLC16]{Lazy-Gproc-Haskell}
-Philip Dexter, Yu~David Liu, and Kenneth Chiu.
-\newblock Lazy graph processing in haskell.
-\newblock In {\em Proceedings of the 9th International Symposium on Haskell},
-  pages 182--192. ACM, 2016.
-
 \bibitem[DLP08]{CVS-Demaine}
 Erik Demaine, Stefan Langerman, and Eric Price.
 \newblock Confluently persistent tries for efficient version control.
@@ -51,13 +45,7 @@ Monika~R Henzinger and Valerie King.
   per operation.
 \newblock {\em Journal of the ACM (JACM)}, 46(4):502--516, 1999.
 
-\bibitem[HP06a]{HaskellFT}
-Ralf Hinze and Ross Paterson.
-\newblock {Finger tree}.
-\newblock \url{http://hackage.haskell.org/package/fingertree}, 2006.
-\newblock [Online; accessed 02-Dec-2017].
-
-\bibitem[HP06b]{FTs}
+\bibitem[HP06]{FTs}
 Ralf Hinze and Ross Paterson.
 \newblock Finger trees: a simple general-purpose data structure.
 \newblock {\em Journal of Functional Programming}, 16(02):197--217, 2006.
@@ -70,23 +58,64 @@ Ralf Hinze and Ross Paterson.
   2010.
 \newblock [Online; accessed 22-November-2018].
 
-\bibitem[Lei02]{HaskellSet}
+\bibitem[HP18]{HaskellFT}
+Ralf Hinze and Ross Paterson.
+\newblock \code{Data.FingerTree}.
+\newblock \url{http://hackage.haskell.org/package/fingertree}, 2018.
+\newblock [Online; accessed 02-Dec-2018; version 0.1.4.1].
+
+\bibitem[Kme17]{HaskellLC}
+Edward Kmett.
+\newblock \code{Data.Struct.LinkCut}.
+\newblock \url{http://hackage.haskell.org/package/structs-0.1.1}, 2017.
+\newblock [Online; accessed 02-Dec-2018; version 0.1.1].
+
+\bibitem[Lei17]{HaskellSet}
 Daan Leijen.
-\newblock {Set}.
+\newblock \code{Data.Set}.
 \newblock
   \url{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html},
-  2002.
-\newblock [Online; accessed 02-Dec-2017].
+  2017.
+\newblock [Online; accessed 02-Dec-2018; version 0.5.10.2].
+
+\bibitem[MM15]{TreeContraction}
+Akimasa Morihata and Kiminori Matsuzaki.
+\newblock Parallel tree contraction with fewer types of primitive contraction
+  operations and its application to trees of unbounded degree.
+\newblock {\em Information and Media Technologies}, 10(1):17--25, 2015.
+
+\bibitem[Mor18]{HaskellET}
+Chahine Moreau.
+\newblock \code{Data.EulerTourTree}.
+\newblock \url{http://hackage.haskell.org/package/euler-tour-tree}, 2018.
+\newblock [Online; accessed 02-Dec-2018; version 0.1.1.0].
+
+\bibitem[Oka18]{HaskellEdison}
+Chris Okasaki.
+\newblock \code{Data.Edison.Coll}.
+\newblock \url{https://hackage.haskell.org/package/EdisonCore}, 2018.
+\newblock [Online; accessed 02-Dec-2018; version 1.3.2.1].
 
 \bibitem[ST83]{DS-DynTs}
 Daniel~D Sleator and Robert~Endre Tarjan.
 \newblock A data structure for dynamic trees.
 \newblock {\em Journal of computer and system sciences}, 26(3):362--391, 1983.
 
+\bibitem[Tar83]{LittleBook}
+Robert~Endre Tarjan.
+\newblock {\em Data structures and network algorithms}, volume~44.
+\newblock Siam, 1983.
+
 \bibitem[Wer06]{WerneckR-PhD}
 Renato~F. Werneck.
 \newblock {\em Design and Analysis of Data Structures for Dynamic Trees}.
 \newblock PhD thesis, Princeton University, 2006.
+
+\bibitem[Xia18]{HaskellRAZ}
+Li-yao Xia.
+\newblock \code{Data.Raz}.
+\newblock \url{http://hackage.haskell.org/package/raz}, 2018.
+\newblock [Online; accessed 02-Dec-2018; version 0.1.0.0].
 
 \bibitem[Yor12]{Monoids}
 Brent~A Yorgey.

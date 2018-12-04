@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: dynTsET.aux
 The style file: alpha.bst
 Database file #1: ./Refs/refs.bib
-You've used 15 entries,
+You've used 20 entries,
             2543 wiz_defined-function locations,
-            664 strings with 6842 characters,
-and the built_in function-call counts, 5930 in all, are:
-= -- 616
-> -- 264
-< -- 8
-+ -- 89
-- -- 86
-* -- 390
-:= -- 974
-add.period$ -- 51
-call.type$ -- 15
-change.case$ -- 90
-chr.to.int$ -- 14
-cite$ -- 15
-duplicate$ -- 228
-empty$ -- 431
-format.name$ -- 105
-if$ -- 1225
-int.to.chr$ -- 2
+            700 strings with 7770 characters,
+and the built_in function-call counts, 7121 in all, are:
+= -- 730
+> -- 298
+< -- 13
++ -- 95
+- -- 93
+* -- 443
+:= -- 1175
+add.period$ -- 69
+call.type$ -- 20
+change.case$ -- 113
+chr.to.int$ -- 20
+cite$ -- 20
+duplicate$ -- 276
+empty$ -- 540
+format.name$ -- 122
+if$ -- 1465
+int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 10
-newline$ -- 83
-num.names$ -- 45
-pop$ -- 92
+missing$ -- 12
+newline$ -- 112
+num.names$ -- 60
+pop$ -- 130
 preamble$ -- 1
-purify$ -- 106
+purify$ -- 135
 quote$ -- 0
-skip$ -- 203
+skip$ -- 246
 stack$ -- 0
-substring$ -- 328
-swap$ -- 44
-text.length$ -- 8
-text.prefix$ -- 5
+substring$ -- 350
+swap$ -- 40
+text.length$ -- 13
+text.prefix$ -- 10
 top$ -- 0
-type$ -- 120
+type$ -- 156
 warning$ -- 0
-while$ -- 59
-width$ -- 21
-write$ -- 202
+while$ -- 68
+width$ -- 25
+write$ -- 270

@@ -1,12 +1,25 @@
 \section{Related Work} 
 \label{sec:RelWrk} 
 
-Approaches different to our own have, of course, been taken by other researchers, in particular by Dexter et al. \cite{Lazy-Gproc-Haskell} as well as by Headley and Hammer \cite{RAZ}. The former uses techniques to delay the computation of updates and the latter uses lighter and simpler data structures. Considering our own work alongside these approaches leads us to suggest that it may be possible to produce an interesting combination of the three, since there are at least three aspects we have found to be experimentally time-consuming in practice:
+There is a lot of work and research done in the imperative paradigm regarding dynamic tree data structures and related operations. In the other hand, functional programming looks abandoned. In this section we present at least one alternative to finger trees for the Euler-tour trees managed as sequence. Then, we show the current situation about dynamic trees in the Haskell library repository.
 
-\begin{enumerate}
-\item an Euler tour is treated as a sequence by efficient structures like finger trees, but the corresponding tree-like operations are also involved in update operations. A mixed, or lighter structure is an essential step towards achieving general efficiency;
+\subsection{Functional Sequence}
+The Random Access Zipper, or RAZ for short, is an editable sequence within purely-functional data structures. Devised by by Headly and Hammer \cite{RAZ}. The claim here is simplicity, showing the performance between RAZ and finger trees quite closed. The Haskell version for RAZ, provided by Xia \cite{HaskellRAZ}, even implements practically the same operators name for inserting and concatenating elements into the structure such as $\lhd$, $\rhd$ and $\bowtie$ respectively. Apart from the lack of analysis in the performance for the above operators, RAZ does not offer an option for searching access other than an integer index. At this point searching for a specific elements, i.e. the nodes for \link or \cut implies additional interface and implementation.
 
-\item the unbounded sequence of update operations results in a need to maintain the whole structure. In this context persistence triggers the consumption of memory allocation, and this suggests that benefits may accrue if we were to use higher order programming with effects;
+\subsection{Dynamic trees}
 
-\item the internal nodes of our finger tree structure hold the internal monoid \code{Set}, which is the most time-consuming element in our code and experimental results. Since rebalancing is an essential property of the internal binary search tree in \code{Set}, we propose conducting an analysis and design of different new balanced binary search tree as monoid in future work.
-\end{enumerate}
+Recall dynamic trees problem can be addressed by three approaches: path decomposition, tree contraction and linearisation. Although our attention was in the latter, through Euler tours, the former can potentially offer a solution for dynamic connectivity, specifically when ignoring the labels over the edges. Kmett \cite{HaskellLC}, provides a Haskell implementation of Link-Cut trees, based on the basic operations defined in Tarjan in \cite{LittleBook}. Although Kmett's basic operations run also in $O(\log n)$ per operation, his library does not include the forest context so far. 
+
+An additional alternative to linearisation approach is the work done by Moreau \cite{HaskellET}. Also implemented on a finger tree, the monoidal annotation extends our proposal by including a set of nodes and the size of the forest as well as the first and last nodes in the subtrees to allow uniqueness in the edges set.
+\begin{lstlisting}[mathescape]
+data EulerTourMonoid node = EulerTourMonoid
+  (First node)
+  (Set (node, node))
+  (Last node)
+  (Set node)
+  (Sum Int)
+\end{lstlisting} 
+
+Like Kmett's work, Moreau's implementation also lacks of a forest context definition and interface. Perhaps the major  drawback from Moreau's structure is that of searching. Since every edge in Moreau's finger tree definition is stored only in the monoid and not on the leaves, searching for a specific edge $(x,y)$ trends to return unexpected sub sequences (subtrees), leading to bad formation of Euler-tours hence {\cut}ting and {\link}ing are not accurate.
+
+Finally, Morihata and Matsuzaki \cite{TreeContraction} present a data structure and an algorithm for dealing with tree contraction approach. Nevertheless its computations are described in Haskell, the implementation is done in C\texttt{++}. Their interface does not offer means to perform {\link}s or {\cut}s. The forest context is out of the scope in this publication.

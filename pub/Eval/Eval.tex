@@ -1,34 +1,93 @@
-\section{Evaluation} 
+\section{Experimental Evaluation} 
 \label{sec:Eval} 
 
 
-In this section we evaluate ETFT. We demonstrate that \code{link}, \code{cut} and \code{connected} are efficient, that is, they have amortised complexity $O(\log n)$.
-We compiled our code through \texttt{ghc} verion 8.0.1, and ran it on a 2.2 GHz Intel Core i7 MacBook Pro with 16 GB 1600 MHz DDR3 running macOS High Sierra version 10.13.1 (17B1003). We use the \cite{HaskellFT} code for finger trees.
+This section presents experiments to evaluate how much running time costs in terms of performance. The experiments will show that, in practice, \dyntset is faster by a factor of $O(\log n)$ per operation than that of the theoretical analysis (Section\ref{sec:TechDes}).
+
+This section is organised as follows. Firstly, we describe the experimental setup. Secondly, a brief description in the implementation of test sets is provided. We then present experimental studies of the three different operations in \dyntset. Finally, we present an additional experiment for the cases where laziness as speeding up factor in favor of the running times for the dynamic tree operations.
 
 
-\tcb{THIS SECTION IS TINY}
+\subsection{Experimental Setup}
+Functions \link, \cut, \conn, \code{root} and \code{reroot} were implemented by the author in Haskell and compiled with \code{ghc} version 8.0.1 with optimisation \code{-O2}. The experiments were performed on a 2.2 GHz Intel Core i7 MacBook Pro with 16 GB 1600 MHz DDR3 running macOS High Sierra version 10.13.1 (17B1003). We imported the following libraries into our code from the online package repository Hackage: \cite{HaskellFT} code for finger trees, \cite{HaskellSet} for conventional sets and \cite{HaskellEdison} for lazy sets.
+
+The running time of a given computation was determined by the mean of three executions.
+
+\subsection{Data structure} 
+
+The values maintained by the data structures (sets and finger trees) are stored as fixed-precision \code{Int} types, holding values from $-2^{29}$ up to $2^{28}$ although we test only the positive values.
+
+The structures are initialized with a fixed number of nodes (or vertices) $n$; this number does not change during the execution. This allow us to know the initial size of the forest and we subtract it from the benchmarking.
+
+Since \dyntset is not called by any application, the random generation of nodes for \link or \cut does not necessarily be effective. Actually, around 70\% of the generated nodes $x$ and $y$ passed to \link and \cut were not valid, that is, their result turned out to be the original forest. In order to overcome this, we stored the random generated nodes that were effective into a plain files and from there benchmarking the dynamic tree operations.
 
 
-\textit{Experimental Setup.} We present the following experiment. We construct a forest from scratch by inserting elements, through \code{link} in descending order, followed by queries through \code{connect} to the just created forest, and then split those trees with\code{cut}. Upon reaching a target length, we record the total time taken. We use target lengths of 50K to 500M elements (vertices), and repeat the process for a total of five data points for each target. We plot the median of the results, shown in Figure~\ref{fig:plot1}. 
-\begin{figure}
+\subsection{Incremental operations} 
+We start with an empty forest (just singleton-trees); given $n=20,000$ nodes we perform $1 \ldots 20,000$ \link operations. Upon reaching a target length, we plot the total time taken. Then, we divide the time taken by the number of operations to calculate the time per operation and then multiply it by a constant (x1000) to make the curve visible in the same chart.
+
+\begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.55]{./Images/plot1} 
+\includegraphics[scale=0.4]{./Images/plotLink} 
 \end{center}
-\caption{Sequence of \textit{link}s, \textit{cut}s, and \textit{connected}s}
-\label{fig:plot1}
+\caption{Sequence of {\link}s from empty forest up to a single tree in such forest}
+\label{fig:incLink}
 \end{figure}
 
+\textit{\emph{Results}}. The behaviour of the curve regarding the time per \link operation shows that in practice it takes $O(1)$ against $O(\log n^2)$ in theory back in Section~\ref{sec:TechDes}, or the linear behaviour by the \link operations in bulk.
 
-\tcb{Deduce regression line in Fig \ref{fig:plot1}}
+\subsection{Fully dynamic operations} 
+We start with the incremental process as before for $n=10,000$. Then, for \cut we start in the opposite direction, that is, cutting from a single tree in the forest until only singleton-trees remain in such forest. To this performance we subtract the time take for the incremental bit. For \conn performance we compute first an interleaved operation of \link and \cut (not necessarily in this order). We measure the time taken for \conn followed by the corresponding \link or \cut and then we subtract the interleaved process. The following figures show our three dynamic operations in bulk and per operation.
 
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.38]{./Images/plotEach}
+  \caption{In bulk}
+%  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.38]{./Images/plotOpsIndiv}
+  \caption{Per operation}
+%  \label{fig:sub2}
+\end{subfigure}
+\caption{Time taken by operation, and interleaved \link and \cut}
+\label{fig:EachOp}
+\end{figure}
 
-\textit{Results}. As expected, the growth of the curves by \textit{link} and \textit{cut} is linear. Given a sequence of size $m$ of update operations which take $O(\log n)$ each, the overall time turns into $O(m(\log n))$. This is because every update operation changes the size of the forest which is carry on all the way in the sequence. Finally, \textit{connected}, takes almost constant time, in fact $O(\log n)$, since the size of the forest remains fixed during the sequence. 
+\textit{\emph{Results}}. We observe that \cut and \conn obey the same pattern as \link. That is, $O(1)$ time per operation being \textit{connectivity} the fastest of the dynamic tree operations, as expected.
 
+From the above analyses, we notice that \link performs better when is interleaved with \cut. To see this behaviour closer, we present the bulk and individual cases in the following charts varying the forest size under the same amount of operations.
 
-\tcr{The introduction promises O(log n) amortised runtimes, but the paper never discusses the amortised aspect. Amortised over what usage? Similarly, the introduction mentions a ``key insight" of O(1) operations, but this train of thought is likewise not picked up later.} 
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.38]{./Images/plotForests}
+  \caption{In bulk}
+%  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.38]{./Images/plotLCForests}
+  \caption{Per operation}
+%  \label{fig:sub2}
+\end{subfigure}
+\caption{Time taken when \link and \cut are interleaved with different forest sizes}
+\label{fig:EachOp}
+\end{figure}
 
+\subsection{Selection of the set data structure}
+The set-like data structure is crucial in our implementation and testing of \dyntset since is the search engine for the nodes when any operation is applied to a forest. There are plenty of implementations for such set-like structure, mostly as binary balanced search trees. In our case, where Haskell is a lazy-evaluation language by default, we select two main choices to compare: \code{Data.Set} which is a strict data type definition and \code{Data.Edison.Coll.LazyPairingHeap} which is semi-lazy or semi-strict data type. The following figure shows the performance for each.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.4]{./Images/plotSets} 
+\end{center}
+\caption{Dynamic operations through different sets structures as monoidal annotations}
+\label{fig:plotSets}
+\end{figure}
+
+The above curves show that, although by a constant factor, laziness speeds up the running time in the computation of dynamic tree operations through the set-like data structures.
 
 \tcb{Amortised over what??}
-
-
-\tcr{Sets in Haskell are trees themselves, and it is odd to store a tree in every node of a tree. Can you take the finger tree, specialized to this particular monoidal annotation, and optimize it further more?}
