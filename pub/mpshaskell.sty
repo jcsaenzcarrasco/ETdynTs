@@ -6,16 +6,18 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{listings}
 
+\newcommand{\haskell}[1]{\lstinline£#1£}
 
 \newcommand{\myStringStyle}{\ttfamily}
 \newcommand{\myCommentStyle}{\color{Gray}\myStringStyle}
 \newcommand{\myIdentifierStyle}{\color{BrickRed}\myStringStyle}
 \newcommand{\myKeyWordStyle}{\color{Green}\myStringStyle}
 \newcommand{\myClassStyle}{\color{Red}\myStringStyle}
-\newcommand{\myTypeVarStyle}{\color{Black}\myStringStyle}
+\newcommand{\myTypeVarStyle}{\color{Brown}\myStringStyle}
 \newcommand{\myCodeWordStyle}{\color{Blue}\myStringStyle}
 \newcommand{\myFunctionStyle}{\color{Blue}\itshape\myStringStyle}
 \newcommand{\myConstructorStyle}{\color{Purple}\myStringStyle}
+\newcommand{\myTypeNameStyle}{\color{Brown}\myStringStyle}
 \newcommand{\mySymbolColour}{Blue}
 
 \newcommand{\KeyWords}[1]{
@@ -41,29 +43,62 @@
 \newcommand{\newConstructor}[1]{
   \lstset{classoffset=5,morekeywords={#1},keywordstyle=\myConstructorStyle,classoffset=0,}
 }
+\newcommand{\newTypeName}[1]{
+  \lstset{classoffset=6,morekeywords={#1},keywordstyle=\myTypeNameStyle,classoffset=0,}
+}
 \newcommand{\newSymbol}[2]{\newcommand{#1}{\textcolor{\mySymbolColour}{#2}}}
 
+\makeatletter%
+\lstdefinestyle{mystyle}{%
+  basicstyle=\ttfamily%
+  \lst@ifdisplaystyle\footnotesize\fi%
+}%
+\makeatother
 
 \lstset{
-  language         = Haskell,
-  numbers          = left,
-  basicstyle       = \normalsize,     % it was footnotesize
+  language         = haskell,
+  style            = mystyle,
   basewidth        = {0.5em,0.5em},
   frame            = single,
   frameround       = tttt,
   stringstyle      = \myStringStyle,
-  showstringspaces =false,
+  showstringspaces = false,
   identifierstyle  = \myIdentifierStyle,
   commentstyle     = \myCommentStyle,
-}
+  flexiblecolumns=false,
+  literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1%
+           {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{$\lambda$}}1%
+           {\\\\}{{\char`\\\char`\\}}1%
+           {->}{{$\rightarrow$}}2 {>=}{{$\geq$}}2 {<-}{{$\leftarrow$}}2%
+           {<=}{{$\leq$}}2 {=>}{{$\Rightarrow$}}2%
+           {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2%
+           {>>}{{>>}}2 {>>=}{{>>=}}2%
+           {|}{{$\mid$}}1,
+  mathescape = true,
+  }
 
-\newcommand{\haskell}[1]{\lstinline`#1`}
+  
 
-\KeyWords{data,type,newtype,deriving,case,of}
-\newClass{Eq,Ord,Show,Read,Maybe}
+\KeyWords{data,type,newtype,deriving,case,of,let,where}
+
+\newClass{Eq,Ord,Show,Read}
+
+\newTypeName{Int,Bool,String}
+\newTypeName{%
+  Data,%
+  Data.Graph,%
+  Data.Graph.Inductive,%
+  Data.Graph.Inductive.Graph,%
+  Tree}
+\newTypeName{Array,Data.Array,Table}
+
+\newTypeName{Maybe}
 \newConstructor{Just,Nothing}
-\newTypeVar{a,b,c,x,y,z,t}
+
+\newTypeVar{a,b,c,x,y,z,t,g}
+
+\lstset{morecomment=[l][\myCommentStyle]{--}}
 
 
- 
+
 
