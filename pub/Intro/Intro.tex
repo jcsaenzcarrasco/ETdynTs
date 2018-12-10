@@ -6,6 +6,7 @@ In this paper we show how functional programming features (for example, the use 
 Our contribution in this paper is to provide a novel functional programming data structure for network representation that allows the programming of suitable low-complexity algorithms, and we provide experimental confirmation of our performance claims. As explained in more detao; below, we work with collections of spanning trees (one for each connected component of the network), and in this context our operations show the following complexities (Figure)
 
 \begin{center}
+\begin{table}
 \begin{tabular}{||l | l | c||} 
 \hline
 Function & Description & Complexity \\ %[0.5ex] 
@@ -35,9 +36,8 @@ Function & Description & Complexity \\ %[0.5ex]
   & $O(1)$ \\
 \hline   
 \end{tabular}
-\caption{Amortised time complexity for various dynamic network-editing operations in terms of their effect on the associated forest of spanning trees. In each case, $n$ gives the number of vertices in the first (or only) tree operated upon; for those functions taking two trees as input, $m$ i the number of verticies in the second tree. The result for \link assumes that $m \leq n$ (if not, we can swap the order of the arguments before applying the algorithm).
-\normalsize 
-\end{center}
+\caption{Amortised time complexity for various dynamic network-editing operations in terms of their effect on the associated forest of spanning trees. In each case, $n$ gives the number of vertices in the first (or only) tree operated upon; for those functions taking two trees as input, $m$ i the number of vertices in the second tree. The result for \link assumes that $m \leq n$ (if not, we can swap the order of the arguments before applying the algorithm).}
+\end{table}\end{center}
 
 
 
