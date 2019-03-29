@@ -64,9 +64,7 @@ Sheffield S1 4DP, United Kingdom}
 \fntext[conacyt]{Postgraduate research student, supported by the Consejo Nacional de Ciencia y Tecnolog\'{i}a, CONACYT (Mexican National Council for Science and Technology) under grant 411550, scholar 580617, CVU 214885.}
 
 \begin{abstract}
-In this paper we show how features commonly adopted for functional programming languages, most notably the use of lazy evaluation, can be exploited to help model massive dynamically changing networks. Such networks are increasingly ubiquitous and it is important to provide low-complexity, preferably sub-linear, algorithms for such key tasks as finding paths between nodes, re-routing network traffic due to local outages, or distributing workloads strategically to maximize network efficiency.
-
-We introduce a novel dynamic data structure which supports $\O(\log n)$ amortised complexity for all three of the basic dynamic operations (\link, \cut and \conn), where $n$ is the number of vertices \madd{[are discussing networks or trees?]} in the network. While existing functional structures mirror these time bounds in isolation, ours appears to be the first to support all three of the operations within a single structure. To demonstrate that the algorithms perform well in practice we have implemented them in Haskell and conducted various benchmarking experiments. The results support our theoretical analysis, while also pointing the way to remaining inefficiencies ripe for exploration. We discuss these in detail and suggest additional ways forward.
+We introduce a novel dynamic data structure which simultaneously supports $\O(\log n)$ amortised complexity for all three of the basic dynamic operations on forests (\link, \cut and \conn), where $n$ is the total number of vertices. While existing functional structures mirror these time bounds in isolation, ours supports all three of the operations within a single structure. To demonstrate that the algorithms perform well in practice we have implemented them in Haskell and conducted various benchmarking experiments. The results support our theoretical analysis, while also pointing the way to remaining inefficiencies ripe for exploration. We discuss these in detail and consider potential next steps.
 \end{abstract}
 
 \begin{keyword}
@@ -82,31 +80,52 @@ Dynamic tree algorithms \sep functional programming \sep persistent data structu
 \section{Introduction}
 \label{sec:Intro}
 
-Given two caterpillars in a forest, are they on the same tree? The answer to this question depends on \emph{when} we ask the question, because the forest ecosystem is a dynamic system. The same problemCaterpillars Even as the question is being posed, new connections may be added and old ones deleted; trees within the forest can merge, separate and dissolve many times over. We do not even know how many trees the forest contains.
 
-If we are to answer these questions efficiently, we need to use a dynamic data type to store information about the network, its vertices, and edges. Our goal is to ensure that updates to the network will result in only local changes to the data representation; we do not want to recompute the entire representation simply because one edge has been added or removed. Our approach is first to represent connected components not as graphs but as spanning trees, and then to use a novel approach to representing these trees dyanmically. [discussion: While adding a vertex to a component and adding it to the spanning tree are equivalent tasks, breaking an edge in the spanning tree corresponds to breaking multiple edges in the underlying component.]
+In this paper we introduce a new data type that supports efficient querying and editing of massive dynamically changing forests, e.g. the forest of component spanning trees in a collection of dynamically changing d-hoc networks, in the context of functional programming. The use of functional programming is to some extent incidental, but the efficiency of our approach certainly relies on aspects of functional programming -- in particular, the use of lazy evaluation.
 
-In this paper we show how features common to functional programming languages (for example, the use of lazy evaluation) can be exploited to help query massive dynamically changing forests. Such networks are increasingly ubiquitous and provide important value-added to modern commerce and society. With growing size, however, comes additional computational overheads, and it is important to identify low-complexity, preferably sub-linear, algorithms for such heavily utilised tasks as path-finding, re-routing and dynamic workload distribution.
+The importance of choosing the right functional data type has been demonstrated on an application-by-application basis by many authors. For example, Sleator and Tarjan used path-decomposition with \textit{link-cut} trees for solving network flow problems \cite{DS-DynTs}. Frederickson showed how \textit{topology} trees can be used with tree contraction to maintain minimum spanning trees \cite{DSs-Online-Upd-MSTs}. Of particular interest for our purposes are Henzinger and King's \textit{Euler tour} (ET) trees, introduced by them to speed up dynamic connectivity checking on graphs \cite{Rand-DynGs-Algos}. We adopt their \textit{linearisation} approach, in which trees (of any degree) are re-expressed using a flattened sequence-like representation, thereby allowing a non-linear structure to be manipulated as if it were linear.
 
-Our contribution in this paper is to provide a novel functional programming data structure for network representation that allows the programming of suitable low-complexity algorithms, and we provide experimental confirmation of our performance claims. Our results both exploit and rely on the properties of finger trees (Hinze and Paterson). We extend the application of finger trees, offer a solution for dynamic connectivity when facing persistent data structures, and provide a simple interface to the user. The \dyntset exposes two types, \code{Tree} and \code{Forest}, to the user. Table \ref{tab:our-complexities} lists our functions, their types (expressed in Haskell format) and their (amortised) time complexities. Informally, the associated semantics are
+All the above techniques have been implemented and studied for ephemeral i.e. non-functional) data structures, performing $\O(\log n)$ per operation. Functional data structures, on the other hand, ease the reasoning and implementation for the cases when preserving history is needed as in self-adjusting computation \cite{DynamizingAlgos} or as in version control \cite{CVS-Demaine}. To overcome the lack of pointers, researchers have devised data structures to represent efficient sequences, most notably, \textit{finger trees} \cite{FTs}. This structure performs well, allowing updates and queries in logarithmic time. We introduce the \emph{dynamic trees through Euler-tours}, a variant of the Hinze's and Paterson finger trees, or \dyntset for short. Like the finger tree, the \dyntset edit sequences in logarithmic time while providing dynamic tree operations. The key insight is to make $\O(1)$ steps to perform \textit{connected}, \textit{link}, and \textit{cut} in logarithmic time. In Section \ref{sec:TechDes} we show this for \textit{connected} and \textit{cut}, whereas \textit{link} takes $\O(m \log n)$. In Section \ref{sec:Eval} we show that, in practice, different results can be obtained, such $\O(1)$ per operation as long as \link is interleaved with \cut.
+ \tcb{NO FURTHER explanation about the $\O(1)$ performance}
+
+
+\paragraph{Contribution}
+Our contribution in this paper is to provide a novel functional programming data structure for network representation that allows the programming of suitable low-complexity algorithms, and we provide experimental confirmation of our performance claims. Our results both exploit and rely on the properties of finger trees (Hinze and Paterson). We extend the application of finger trees, offer a solution for dynamic connectivity when facing persistent data structures, and provide a simple interface to the user. The \dyntset exposes two types, \code{Tree} and \code{Forest}, to the user. 
+
+Figure \ref{fig:semantics} describes the functions relevant to our investigation. Table \ref{tab:our-complexities} lists their types (expressed in Haskell format) and (amortised) time complexities. In addition to these, we make free use of functions provided by Hinze and Paterson for finger tree manipulation \cite{FTs}.
+
+
+\begin{figure}[!htb]
+\noindent \underline{Tree manipulation}
 \begin{itemize}
- \item \code{linkTree v1 t1 v2 t2 :: Tree} \\
-   adds a new edge linking vertex \code{v1} of tree \code{t1} to vertext \code{v2} of tree \code{t2}, and returns the resulting tree. \madd{What happens if already in the same tree?}
+\item \code{linkTree v1 t1 v2 t2 :: Tree} \\
+   adds a new edge linking vertex \code{v1} of tree \code{t1} to vertex \code{v2} of tree \code{t2}, and returns the resulting tree. \madd{What happens if already in the same tree?}
  \item \code{cutTree v1 v2 t :: (Tree,Tree)} \\
    cuts the edge linking vertices \code{v1} and \code{v2} in tree \code{t}, and returns the resulting pair of trees.
- \item \code{conn v1 v2 f :: Bool} \\
-   returns \code{True} if vertices \code{v1} and \code{v2} in forest \code{f} are connected, i.e. belong to the same tree, and \code{False} otherwise.
- \item \code{link v1 v2 f :: Forest} \\
-   adds a new edge lining vertices \code{v1} and \code{v2} in forest \code{f}, and returns the resulting forest.
- \item \code{cut v1 v2 f :: Forest} \\
-   cuts the edge connecting vertices \code{v1} and \code{v2} in forest \code{f}, and returns the resulting forest.
- \item \code{reroot t v :: Tree} \\
-   reorganises tree \code{t} so that vertex \code{v} (one of its existing vertices) is now root, and returns the resulting tree.
- \item \code{root t :: Maybe(Vertex)} \\
-   returns \code{Just v} if \code{v} is the root of the tree \code{t}, and \code{Nothing} otherwise (if the tree is non-empty)
 \end{itemize}
 
-\begin{center}
+\noindent \underline{Forest manipulation and querying}
+\begin{itemize}
+ \item \code{conn v1 v2 f :: Bool} \\
+   returns \code{True} if vertices \code{v1} and \code{v2} in forest \code{f} belong to the same tree, and \code{False} otherwise.
+ \item \code{link v1 v2 f :: Forest} \\
+   if vertices \code{v1} and \code{v2} belong to different trees, this adds the edge \code{(v1,v2)} to the forest, thereby causing the trees containing \code{v1} and \code{v2} to be joined together to form a new tree; if the vertices already belong to the same tree, the operation has no effect. In either case we return the resulting forest.
+ \item \code{cut v1 v2 f :: Forest} \\
+     if vertices \code{v1} and \code{v2} are connected by an edge, this removes that edge, thereby causing the tree that contains it to be split into two smaller trees; if the vertices are not connected, the operation has no effect. In either case we return the resulting forest.
+\end{itemize}
+
+\noindent \underline{Core functions}
+\begin{itemize}
+ \item \code{reroot t v :: Tree} \\
+   reorganises tree \code{t} so that vertex \code{v} is now root, and returns the resulting tree. \madd{If \code{v} is not a vertex in \code{t}, returns \code{t} unchanged. 
+ \item \code{root t :: Maybe(Vertex)} \\
+   returns \code{Just v} if \code{v} is the root of the tree \code{t}, and \code{Nothing} otherwise (if the tree is non-empty).
+\end{itemize}
+\caption{Informal semantics of the functions investigated in this paper. The functions split into three blocks: the first contains functions performing dynamic tree operations; the next lists functions used to compute an unbounded, although finite, sequence of dynamic tree operations on forests; the third deal with basic core functionality.}
+\label{fig:semantics}
+\end{figure}
+
+
 \begin{small}
 \begin{table}
 \caption{Amortised time complexity for various dynamic forest-editing operations. In each case, $n$ gives the number of vertices in the first (or only) tree operated upon; for those functions taking two trees as input, $m$ is the number of vertices in the second tree. The result for \link assumes that $m \leq n$ (if not, we can swap the order of the arguments before applying the algorithm).}
@@ -128,55 +147,10 @@ Our contribution in this paper is to provide a novel functional programming data
 \label{tab:our-complexities}
 \end{table}
 \end{small} 
-\end{center}
 
 
 
-
-
-Given our use of spanning trees to represent connected components, this question becomes: \emph{do $u$ and $v$ belong to the same tree}? Notice that adding new links within an already connected component does not affect its existing spanning trees; although new spanning trees may become possible, no existing spanning tree loses that status. On the other hand, if we connect vertices from distinct components, joining those nodes in the associated spanning trees automatically creates a new spanning tree for the larger component created by adding the link. (The relationship between deleting an edge in a component vs. deleting it in its spanning tree is more complex--see Sect.~\ref{sec:discussion}.)  We accordingly assume that the forest can change dynamically in response to repeated applications of two basic operations: \link and \cut. 
-\begin{itemize}
-\item
-  if vertices $u$ and $v$ belong to different trees, $\link(u,v)$ adds the edge $(u,v)$ to the forest, thereby causing the trees containing $u$ and $v$ to be joined together to form a new, larger, tree; if the vertices already belong to the same tree, the operation has no effect. Formulated in this way, the function \link, can be denoted as
-\item
-  if vertices $u$ and $v$ are connected by an edge, $\cut(u,v)$ removes that edge, thereby causing the tree that contains it to be split into two smaller trees; if the vertices are not connected, the operation has no effect. 
-\end{itemize}
-
-\madd{WORKING HERE}
-
-The problem has been studied as \textit{dynamic trees} under different variants according to the application, for instance, Sleator and Tarjan defined the \textit{link-cut} tree for solving network flow problems \cite{DS-DynTs}, Henzinger and King provided \textit{Euler tour} (ET) trees for speeding up dynamic connectivity on graphs \cite{Rand-DynGs-Algos} or Frederickson describing the \textit{topology} tree for maintaining the minimum spanning tree \cite{DSs-Online-Upd-MSTs}. The former and latter trees are based on techniques called \textit{path-decomposition} and \textit{tree contraction} respectively. In this paper we are interested on Euler tour trees, a technique called \textit{linearisation}, since the original tree (of any degree) is flattened and handled it as a sequence, in other words, turning a non-linear structure into a linear one.
-
-All the above techniques have been implemented and studied for ephemeral data structures, performing $\O(\log n)$ per operation. Functional data structures, on the other hand, ease the reasoning and implementation for the cases when preserving history is needed as in self-adjusting computation \cite{DynamizingAlgos} or as in version control \cite{CVS-Demaine}. To overcome the lack of pointers, researchers have devised data structures to represent efficient sequences, most notably, \textit{finger trees} \cite{FTs}. This structure performs well, allowing updates and queries in logarithmic time. We introduce the \emph{dynamic trees through Euler-tours}, a variant of the Hinze's and Paterson finger trees, or \dyntset for short. Like the finger tree, the \dyntset edit sequences in logarithmic time while providing dynamic tree operations. The key insight is to make $\O(1)$ steps to perform \textit{connected}, \textit{link}, and \textit{cut} in logarithmic time. In Section \ref{sec:TechDes} we show this for \textit{connected} and \textit{cut}, whereas \textit{link} takes $\O(m \log n)$. In Section \ref{sec:Eval} we show that, in practice, different results can be obtained, such $\O(1)$ per operation as long as \link is interleaved with \cut.
- \tcb{NO FURTHER explanation about the $\O(1)$ performance}
-
-\madd{MOVED THIS TO TOP -- NEEDS A BIT IF REWRITING}
-
-The contribution of this paper is to give first work-optimal bounds for managing dynamic trees for purely functional data structures. We do this not only for extending the application of finger trees, we offer a solution for dynamic connectivity when facing persistent data structures as well as providing a simple interface to the user. The \dyntset exposes two types, \texttt{Tree} and \texttt{Forest}, to the user. The following is a compilation of \tcb{OUR} the functions, types and times we have implemented in Haskell, on top of that done by Hinze and Paterson \cite{FTs}:
-
-\begin{center}
-\small
- \begin{tabular}{||l | l | c||} 
- \hline
- Function & Type & Time complexity \\ %[0.5ex] 
- \hline\hline
- \texttt{linkTree} & \texttt{Vertex} $\to$ \texttt{Tree} $\to$ \texttt{Vertex} $\to$ \texttt{Tree} $\to$ \texttt{Tree} & $\O(m\log n)$ \\
- \texttt{cutTree} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Tree} $\to$ \texttt{(Tree,Tree)} & $\O(\log n)$ \\
- \hline
- \texttt{conn} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Bool} & $\O(\log n)$ \\ 
- \texttt{link} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Forest} & $\O(m\log n)$ \\
- \texttt{cut} & \texttt{Vertex} $\to$ \texttt{Vertex} $\to$ \texttt{Forest} $\to$ \texttt{Forest} & $\O(\log n)$ \\
- \hline
- \texttt{reroot} & \texttt{Tree} $\to$ \texttt{Vertex} $\to$ \texttt{Tree} & $\O(\log n)$ \\
- \texttt{root} & \texttt{Tree} $\to$ \texttt{Maybe(Vertex)} & $\O(1)$ \\
- \hline   
-\end{tabular}
-where $n$ and $m$ are the corresponding sizes of the trees involved; when $linking$ is performed, then the constraint $m \leq n$ should taken into account
-\end{center}
-\normalsize 
-
-The first block (first two rows) contains the functions to perform dynamic tree operations. The following block (rows 4, 5 and 6) lists the functions that compute an unbounded, although finite, sequence of dynamic tree operations over the same forest $F$. Finally, last two rows are the core functions, apart from the ones provided by Hinze and Paterson work \cite{FTs}. 
-%, to perform dynamic tree operations. \tcb{PERHAPS explain the above table widely or paraphrasing ???}
-
+\subsection*{Structure of the paper}
 In the next section, we give an overview of the finger tree functions and their performance. These are the foundations for our functions altogether with some of the functions from the Hackage library \texttt{Data.Set} \footnote{https://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Set.html} which mimic the set-like operations over our functions, such as testing membership. 
 
 %In Section~\ref{sec:Example}, we present an in-depth example using the operations mentioned above. In particular, we depict how the \dyntset manages the trees as sequences under the dynamic setting, showing how the \dyntset structure is constructed immutably. 
