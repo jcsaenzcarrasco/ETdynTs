@@ -64,7 +64,7 @@ Sheffield S1 4DP, United Kingdom}
 \fntext[conacyt]{Postgraduate research student, supported by the Consejo Nacional de Ciencia y Tecnolog\'{i}a, CONACYT (Mexican National Council for Science and Technology) under grant 411550, scholar 580617, CVU 214885.}
 
 \begin{abstract}
-We introduce a novel dynamic data structure which simultaneously supports $\O(\log n)$ amortised complexity for all three of the basic dynamic operations on forests (\link, \cut and \conn), where $n$ is the total number of vertices. While existing functional structures mirror these time bounds in isolation, ours supports all three of the operations within a single structure. To demonstrate that the algorithms perform well in practice we have implemented them in Haskell and conducted various benchmarking experiments. The results support our theoretical analysis, while also pointing the way to remaining inefficiencies ripe for exploration. We discuss these in detail and consider potential next steps.
+We introduce a novel dynamic data structure which simultaneously supports $\O(\log n)$ amortised complexity for all three of the basic dynamic operations on forests (\link, \cut and \conn), where $n$ is the total number of vertices. While existing functional structures mirror these time bounds in isolation, ours supports all three of the operations within a single structure. To confirm that the algorithms perform well in practice we have implemented them in Haskell and conducted various benchmarking experiments. The results support our theoretical analysis, while also pointing the way to remaining inefficiencies. We consider these in detail and discuss potential next steps.
 \end{abstract}
 
 \begin{keyword}
@@ -117,7 +117,7 @@ Figure \ref{fig:semantics} describes the functions relevant to our investigation
 \noindent \underline{Core functions}
 \begin{itemize}
  \item \code{reroot t v :: Tree} \\
-   reorganises tree \code{t} so that vertex \code{v} is now root, and returns the resulting tree. \madd{If \code{v} is not a vertex in \code{t}, returns \code{t} unchanged. 
+   reorganises tree \code{t} so that vertex \code{v} is now root, and returns the resulting tree. \madd{If \code{v} is not a vertex in \code{t}, returns \code{t} unchanged.} 
  \item \code{root t :: Maybe(Vertex)} \\
    returns \code{Just v} if \code{v} is the root of the tree \code{t}, and \code{Nothing} otherwise (if the tree is non-empty).
 \end{itemize}
@@ -832,7 +832,7 @@ We start with an empty forest (just singleton-trees); given $n=20,000$ nodes we 
 \textit{\emph{Results}}. The behaviour of the curve regarding the time per \link operation shows that in practice it takes $\O(1)$ against $\O(\log n^2)$ in theory back in Section~\ref{sec:TechDes}, or the linear behaviour by the \link operations in bulk.
 
 \subsection{Fully dynamic operations} 
-We start with the incremental process as before for $n=10,000$. Then, for \cut we start in the opposite direction, that is, cutting from a single tree in the forest until only singleton-trees remain in such forest. To this performance we subtract the time take for the incremental bit. For \conn performance we compute first an interleaved operation of \link and \cut (not necessarily in this order). We measure the time taken for \conn followed by the corresponding \link or \cut and then we subtract the interleaved process. The following figures show our three dynamic operations in bulk and per operation.
+We start with the incremental process as before for $n=10,000$. Then, for \cut we start in the opposite direction, that is, cutting from a single tree in the forest until only singleton-trees remain in such forest. To this performance we subtract the time take for the incremental bit. For \conn performance we compute first an interleaved operation of \link and \cut (not necessarily in this order). We measure the time taken for \conn followed by the corresponding \link or \cut and then we subtract the interleaved process. Figures~\ref{fig:EachOp} and \ref{fig:EachOp} show the overheads due to our three dynamic operations, both in bulk and per operation.
 
 \begin{figure}[H]
 \centering
@@ -848,13 +848,9 @@ We start with the incremental process as before for $n=10,000$. Then, for \cut w
   \caption{Per operation}
 %  \label{fig:sub2}
 \end{subfigure}
-\caption{Time taken by operation, and interleaved \link and \cut}
+\caption{Performance of the basic operations in a 10k forest, both in isolation and interleaved: (a)~in bulk; (b)~per operation.}
 \label{fig:EachOp}
 \end{figure}
-
-\textit{\emph{Results}}. We observe that \cut and \conn obey the same pattern as \link. That is, $\O(1)$ time per operation being \textit{connectivity} the fastest of the dynamic tree operations, as expected.
-
-From the above analyses, we notice that \link performs better when is interleaved with \cut. To see this behaviour closer, we present the bulk and individual cases in the following charts varying the forest size under the same amount of operations.
 
 \begin{figure}[H]
 \centering
@@ -870,9 +866,14 @@ From the above analyses, we notice that \link performs better when is interleave
   \caption{Per operation}
 %  \label{fig:sub2}
 \end{subfigure}
-\caption{Time taken when \link and \cut are interleaved with different forest sizes}
-\label{fig:EachOp}
+\caption{Performance when interleaving \cut and \link in forests of different sizes: (a)~in bulk; (b)~per operation.}
+\label{fig:EachOpForest}
 \end{figure}
+
+\textit{\emph{Results}}. We observe that \cut and \conn obey the same pattern as \link. That is, $\O(1)$ time per operation being \textit{connectivity} the fastest of the dynamic tree operations, as expected.
+
+From the above analyses, we notice that \link performs better when is interleaved with \cut. %Fig.~\ref{fig:EachOpForest} shows the bulk and individual cases in the following charts varying the forest size under the same amount of operations.
+
 
 \subsection{Selection of the set data structure}
 The set-like data structure is crucial in our implementation and testing of \dyntset since is the search engine for the nodes when any operation is applied to a forest. There are plenty of implementations for such set-like structure, mostly as binary balanced search trees. In our case, where Haskell is a lazy-evaluation language by default, we select two main choices to compare: \code{Data.Set} which is a strict data type definition and \code{Data.Edison.Coll.LazyPairingHeap} which is semi-lazy or semi-strict data type. The following figure shows the performance for each.
